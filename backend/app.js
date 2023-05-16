@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const routes = require('./routes/index');
+
 const app = express();
 const url = process.env.MONGODB_URL;
 const port = process.env.PORT;
@@ -12,6 +14,8 @@ mongoose.connect(url, {
 });
 
 app.use(express.json());
+
+app.use(routes);
 
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to root URL of Server");
