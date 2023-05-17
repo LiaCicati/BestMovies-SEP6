@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const routes = require("./routes/index");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 const url = process.env.MONGODB_URL;
@@ -20,6 +21,8 @@ app.use(routes);
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to root URL of Server");
 });
+
+app.use(errorHandler);
 
 app.listen(port, (error) => {
   if (!error) {
