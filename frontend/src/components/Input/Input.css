@@ -1,4 +1,4 @@
- .input {
+.input {
   border: none;
   border-bottom: 1px solid #e8e8e8;
   font-weight: 400;
@@ -9,12 +9,10 @@
   outline: none;
 }
 
-
 .input__error {
   border-bottom: 1px solid #ee3465;
   color: #ee3465;
 }
-
 
 .input__label {
   font-weight: 400;
@@ -23,8 +21,8 @@
   color: #a0a0a0;
   margin-top: 24px;
   padding-bottom: 5px;
+  text-align: start;
 }
-
 
 .input__error-message {
   font-weight: 400;
@@ -34,12 +32,10 @@
   color: #ee3465;
 }
 
-
 .input__label:first-child {
   margin: 0;
 }
 
-
 .input:focus {
   transform: scale(1.02);
-} 
+}

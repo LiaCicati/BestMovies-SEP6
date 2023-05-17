@@ -17,7 +17,7 @@ const Login = () => {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("token", res.token);
-          navigate("/");
+          navigate("/profile");
         }
       })
       .catch((err) => {

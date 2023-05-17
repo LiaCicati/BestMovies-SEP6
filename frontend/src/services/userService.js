@@ -25,6 +25,18 @@ class UserService {
       body: JSON.stringify({ email, password }),
     }).then(checkResponse);
   };
+
+  getUser = (token) => {
+    return fetch(`${BASE_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(checkResponse);
+  };
 }
 
-export default new UserService();
+const userServiceInstance = new UserService();
+export default userServiceInstance;
