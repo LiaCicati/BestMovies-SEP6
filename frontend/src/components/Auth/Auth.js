@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "./Auth.css";
 import React from "react";
 const Auth = ({ buttonText, linkText, paragraph, href, isDisabledButton }) => {
   return (
