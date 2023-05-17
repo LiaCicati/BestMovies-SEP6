@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const routes = require('./routes/index');
+const routes = require("./routes/index");
 
 const app = express();
 const url = process.env.MONGODB_URL;
