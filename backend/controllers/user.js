@@ -1,5 +1,10 @@
 const jwt = require("jsonwebtoken");
 const UserRepository = require("../data/user.repository");
+const NotFoundError = require("../errors/NotFoundError");
+const BadRequestError = require("../errors/BadRequestError");
+const ConflictError = require("../errors/ConflictError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 const userRepository = new UserRepository();
 
@@ -14,7 +19,7 @@ class UserController {
 
     // Check if the required fields are present
     if (!email || !password || !name) {
-      throw new Error("no data provided");
+      throw new BadRequestError("Email, password or name data is missing");
     }
 
     // Search for an existing user with the same email
@@ -23,7 +28,7 @@ class UserController {
       .then((user) => {
         // If user with the same email already exists log a message and return early
         if (user) {
-          throw new Error("User already exists");
+          throw new ConflictError("User with this email already exists");
         }
 
         // If no user is found, create a new user with the provided details
@@ -54,7 +59,7 @@ class UserController {
       .then((user) => {
         // If no user is found, throw an error
         if (!user) {
-          throw new Error("User not found");
+          throw new NotFoundError("User not found");
         }
 
         // Send the user data in the response
@@ -81,7 +86,7 @@ class UserController {
           // Send the token in the response
           res.send({ token });
         } else {
-          throw new Error("Invalid credentials");
+          throw new UnauthorizedError("Invalid credentials");
         }
       })
       .catch(next);

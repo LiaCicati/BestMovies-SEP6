@@ -4,6 +4,7 @@
 */
 
 const jwt = require("jsonwebtoken");
+const UnauthorizedError = require("../errors/UnauthorizedError");
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -16,7 +17,7 @@ module.exports = (req, res, next) => {
 
   // Check if the authorization header exists
   if (!authorization || !authorization.startsWith("Bearer ")) {
-    console.log("something is wrong with the token");
+    throw new UnauthorizedError("Something is wrong with the token");
   }
 
   // Extract the token from the authorization header
@@ -30,7 +31,7 @@ module.exports = (req, res, next) => {
       `${NODE_ENV === "production" ? JWT_SECRET : "dev-secret"}`
     );
   } catch (err) {
-    console.log("you have to be authorized");
+    throw new UnauthorizedError("You have to be authorized");
   }
 
   // Assign the decoded token to the 'user' property of the request object
