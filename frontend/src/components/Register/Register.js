@@ -1,18 +1,35 @@
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import Auth from "../Auth/Auth";
+// import * as auth from "../../utils/auth";
+import userService from '../../services/userService';
 import "./Register.css";
 import React from "react";
-const Register = ({}) => {
+import { useFormWithValidation } from "../../utils/formValidation";
+import { useNavigate } from "react-router-dom";
+
+const Register = () => {
+  const navigate = useNavigate();
+  const { values, errors, isValid, handleChange } = useFormWithValidation();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
+    userService
+      .registerUser(values.name, values.email, values.password)
+      .then((res) => {
+        if (res.email) {
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <section className="register">
       <h1 className="register__title">Register</h1>
-      <Form name="register" onSubmit={handleSubmit}>
+      <Form name="register" onSubmit={handleSubmit} noValidate>
         <Input
           label="Name"
           id="name"
@@ -21,6 +38,9 @@ const Register = ({}) => {
           minLength="2"
           maxLength="30"
           placeholder="Write your name"
+          onChange={handleChange}
+          value={values.name || ""}
+          error={errors.name}
         />
         <Input
           label="E-mail"
@@ -28,6 +48,9 @@ const Register = ({}) => {
           name="email"
           type="email"
           placeholder="Write your email"
+          value={values.email || ""}
+          error={errors.email}
+          onChange={handleChange}
         />
 
         <Input
@@ -37,9 +60,12 @@ const Register = ({}) => {
           type="password"
           minLength="6"
           placeholder="Write a password"
-          error="Something went wrong..."
+          value={values.password || ""}
+          error={errors.password}
+          onChange={handleChange}
         />
         <Auth
+          isDisabledButton={!isValid}
           buttonText="Register"
           paragraph="Already have an account?"
           linkText="Login"
