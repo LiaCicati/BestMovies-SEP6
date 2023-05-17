@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const UserRepository = require("../data/user.repository");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
@@ -30,22 +31,25 @@ class UserController {
         if (user) {
           throw new ConflictError("User with this email already exists");
         }
-
-        // If no user is found, create a new user with the provided details
-        return this.userRepository.createUser({
-          name,
-          email,
-          password,
-        });
+        return bcrypt.hash(password, 10);
       })
-      .then(({ _id }) => {
-        //  Send a successful response with user details
-        res.status(200).send({
-          _id,
-          email,
-          name,
-        });
-      })
+      .then((hash) =>
+        this.userRepository
+          .createUser({
+            // If no user is found, create a new user with the provided details
+            name,
+            email,
+            password: hash,
+          })
+          .then(({ _id }) => {
+            //  Send a successful response with user details
+            res.status(200).send({
+              _id,
+              email,
+              name,
+            });
+          })
+      )
       .catch(next);
   };
 
@@ -75,18 +79,25 @@ class UserController {
     return this.userRepository
       .findUserByEmailAndPassword(email, password)
       .then((user) => {
-        if (user) {
-          // If user credentials are valid, generate a JWT token
-          const token = jwt.sign(
-            { _id: user._id }, // Payload contains user ID
-            NODE_ENV === "production" ? JWT_SECRET : "dev-secret", // Secret key used for signing the token
-            { expiresIn: "7d" } // Token expiration time
-          );
-
-          // Send the token in the response
-          res.send({ token });
-        } else {
+        if (!user) {
           throw new UnauthorizedError("Invalid credentials");
+        } else {
+          // Compare the provided password with the user's hashed password using bcrypt
+          return bcrypt.compare(password, user.password).then((matched) => {
+            if (!matched) {
+              throw new UnauthorizedError("Invalid credentials");
+            }
+
+            // If user credentials are valid, generate a JWT token
+            const token = jwt.sign(
+              { _id: user._id }, // Payload contains user ID
+              NODE_ENV === "production" ? JWT_SECRET : "dev-secret", // Secret key used for signing the token
+              { expiresIn: "7d" } // Token expiration time
+            );
+
+            // Send the token in the response
+            res.send({ token });
+          });
         }
       })
       .catch(next);
