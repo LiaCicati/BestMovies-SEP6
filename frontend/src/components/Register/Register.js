@@ -1,6 +1,7 @@
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import Auth from "../Auth/Auth";
+import "./Register.css";
 import React from "react";
 const Register = ({}) => {
   const handleSubmit = (e) => {
