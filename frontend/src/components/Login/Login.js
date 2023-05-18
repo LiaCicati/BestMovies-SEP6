@@ -2,27 +2,15 @@ import "./Login.css";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import Auth from "../Auth/Auth";
-import userService from "../../services/userService";
 import { useFormWithValidation } from "../../utils/formValidation";
-import { useNavigate } from "react-router-dom";
 import React from "react";
-const Login = () => {
-  const navigate = useNavigate();
+
+const Login = ({ onLogin }) => {
   const { values, errors, isValid, handleChange } = useFormWithValidation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    userService
-      .loginUser(values.email, values.password)
-      .then((res) => {
-        if (res.token) {
-          localStorage.setItem("token", res.token);
-          navigate("/profile");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    onLogin(values.email, values.password);
   };
 
   return (

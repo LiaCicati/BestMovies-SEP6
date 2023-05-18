@@ -1,29 +1,16 @@
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import Auth from "../Auth/Auth";
-// import * as auth from "../../utils/auth";
-import userService from '../../services/userService';
 import "./Register.css";
 import React from "react";
 import { useFormWithValidation } from "../../utils/formValidation";
-import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-  const navigate = useNavigate();
+const Register = ({ onRegister }) => {
   const { values, errors, isValid, handleChange } = useFormWithValidation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    userService
-      .registerUser(values.name, values.email, values.password)
-      .then((res) => {
-        if (res.email) {
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    onRegister(values.name, values.email, values.password);
   };
 
   return (
