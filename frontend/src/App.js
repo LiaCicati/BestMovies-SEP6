@@ -7,7 +7,7 @@ import Profile from "./components/Profile/Profile";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import userService from "./services/userService";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-
+import Main from "./components/Main/Main";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -60,7 +60,7 @@ function App() {
         if (res.token) {
           localStorage.setItem("token", res.token);
           setIsLoggedIn(true);
-          navigate("/profile");
+          navigate("/");
         }
       })
       .catch((err) => {
@@ -86,6 +86,9 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
         <Routes>
+        <Route path="/" element={<Main />}>
+          
+          </Route>
           <Route
             path="/signup"
             element={<Register onRegister={onRegister} />}
