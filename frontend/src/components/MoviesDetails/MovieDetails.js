@@ -32,7 +32,7 @@ function MovieDetails() {
             movie.credits.crew.find((person) => person.job === "Director")
               ?.name || ""
           );
-          setCast(movie.credits.cast.slice(0, 3));
+          setCast(movie.credits.cast.slice(0, 5));
         })
         .catch((error) => {
           console.error("Error fetching movie details:", error);
