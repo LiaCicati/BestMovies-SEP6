@@ -13,11 +13,18 @@ function MovieDetails() {
       <h2>{movie.title}</h2>
       <p>Rating: {movie.rating}</p>
       <img src={movie.image} alt={movie.title} />
+      <p>{movie.director}</p>
       <p>{movie.original_language}</p>
       <p>{movie.overview}</p>
       <p>{movie.popularity}</p>
       <p>{movie.release_date}</p>
       <p>{movie.vote_count}</p>
+      <h3>Cast:</h3>
+      <ul>
+        {movie.cast.map((castMember, index) => (
+          <li key={index}>{castMember.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }

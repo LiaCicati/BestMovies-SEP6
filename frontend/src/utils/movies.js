@@ -13,6 +13,15 @@ const movies = [
     poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
     release_date: "2023-04-05",
     vote_count: 2570,
+    director: "name of director",
+    cast: [
+      {
+        name: "name of cast",
+      },
+      {
+        name: "name of cast",
+      },
+    ],
   },
   {
     id: 2,
@@ -28,6 +37,15 @@ const movies = [
     poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
     release_date: "2023-04-05",
     vote_count: 2570,
+    director: "name of director",
+    cast: [
+      {
+        name: "name of cast",
+      },
+      {
+        name: "name of cast",
+      },
+    ],
   },
   {
     id: 3,
@@ -43,6 +61,15 @@ const movies = [
     poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
     release_date: "2023-04-05",
     vote_count: 2570,
+    director: "name of director",
+    cast: [
+      {
+        name: "name of cast",
+      },
+      {
+        name: "name of cast",
+      },
+    ],
   },
   {
     id: 4,
@@ -58,6 +85,15 @@ const movies = [
     poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
     release_date: "2023-04-05",
     vote_count: 2570,
+    director: "name of director",
+    cast: [
+      {
+        name: "name of cast",
+      },
+      {
+        name: "name of cast",
+      },
+    ],
   },
   {
     id: 5,
@@ -73,6 +109,15 @@ const movies = [
     poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
     release_date: "2023-04-05",
     vote_count: 2570,
+    director: "name of director",
+    cast: [
+      {
+        name: "name of cast",
+      },
+      {
+        name: "name of cast",
+      },
+    ],
   },
   {
     id: 6,
@@ -88,7 +133,16 @@ const movies = [
     poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
     release_date: "2023-04-05",
     vote_count: 2570,
-  }
+    director: "name of director",
+    cast: [
+      {
+        name: "name of cast",
+      },
+      {
+        name: "name of cast",
+      },
+    ],
+  },
 ];
 
 export default movies;
