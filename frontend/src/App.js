@@ -86,9 +86,7 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
         <Routes>
-        <Route path="/" element={<Main />}>
-          
-          </Route>
+          <Route path="/" element={<Main />}></Route>
           <Route
             path="/signup"
             element={<Register onRegister={onRegister} />}
