@@ -8,6 +8,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import userService from "./services/userService";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Main from "./components/Main/Main";
+import MovieDetails from "./components/MoviesDetails/MovieDetails";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -87,6 +88,14 @@ function App() {
       <div className="app">
         <Routes>
           <Route path="/" element={<Main />}></Route>
+          <Route
+            path="/movies/:id"
+            element={
+              <>
+                <MovieDetails />
+              </>
+            }
+          ></Route>
           <Route
             path="/signup"
             element={<Register onRegister={onRegister} />}

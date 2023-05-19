@@ -1,76 +1,94 @@
 const movies = [
-    {
-      id: 1,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 2,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 3,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 4,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 5,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: true,
-    },
-    {
-      id: 6,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 7,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 8,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-    {
-      id: 9,
-      title: "The Super Mario Bros. Movie",
-      rating: "7.6",
-      image:
-        "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-      liked: false,
-    },
-  ];
-  
-  export default movies;
+  {
+    id: 1,
+    title: "The Super Mario Bros. Movie",
+    rating: "7.6",
+    image: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    liked: false,
+    original_language: "en",
+    original_title: "The Super Mario Bros. Movie",
+    overview:
+      "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+    popularity: 8501.774,
+    poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    release_date: "2023-04-05",
+    vote_count: 2570,
+  },
+  {
+    id: 2,
+    title: "The Super Mario Bros. Movie",
+    rating: "7.6",
+    image: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    liked: false,
+    original_language: "en",
+    original_title: "The Super Mario Bros. Movie",
+    overview:
+      "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+    popularity: 8501.774,
+    poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    release_date: "2023-04-05",
+    vote_count: 2570,
+  },
+  {
+    id: 3,
+    title: "The Super Mario Bros. Movie",
+    rating: "7.6",
+    image: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    liked: false,
+    original_language: "en",
+    original_title: "The Super Mario Bros. Movie",
+    overview:
+      "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+    popularity: 8501.774,
+    poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    release_date: "2023-04-05",
+    vote_count: 2570,
+  },
+  {
+    id: 4,
+    title: "The Super Mario Bros. Movie",
+    rating: "7.6",
+    image: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    liked: false,
+    original_language: "en",
+    original_title: "The Super Mario Bros. Movie",
+    overview:
+      "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+    popularity: 8501.774,
+    poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    release_date: "2023-04-05",
+    vote_count: 2570,
+  },
+  {
+    id: 5,
+    title: "The Super Mario Bros. Movie",
+    rating: "7.6",
+    image: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    liked: false,
+    original_language: "en",
+    original_title: "The Super Mario Bros. Movie",
+    overview:
+      "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+    popularity: 8501.774,
+    poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    release_date: "2023-04-05",
+    vote_count: 2570,
+  },
+  {
+    id: 6,
+    title: "The Super Mario Bros. Movie",
+    rating: "7.6",
+    image: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    liked: false,
+    original_language: "en",
+    original_title: "The Super Mario Bros. Movie",
+    overview:
+      "While working underground to fix a water main, Brooklyn plumbers—and brothers—Mario and Luigi are transported down a mysterious pipe and wander into a magical new world. But when the brothers are separated, Mario embarks on an epic quest to find Luigi.",
+    popularity: 8501.774,
+    poster_path: "/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    release_date: "2023-04-05",
+    vote_count: 2570,
+  }
+];
+
+export default movies;
