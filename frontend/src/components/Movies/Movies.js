@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
+import SearchForm from "../SearchForm/SearchForm";
 
-function Movies({ movies }) {
+function Movies({ movies, onGetMovies }) {
   const getMoviesCount = () => {
     switch (true) {
       case window.innerWidth >= 944:
@@ -22,9 +23,18 @@ function Movies({ movies }) {
   const [moviesCount, setMoviesCount] = useState(getMoviesCount());
   const [allMovies, setAllMovies] = useState([]);
   const [currentMovies, setCurrentMovies] = useState([]);
-
+  const [searchValue, setSearchValue] = useState("");
+  
   const handleClickMoreButton = () => {
     setMoviesCount(moviesCount + loadMovies());
+  };
+
+  const handleSearchSubmit = (value) => {
+    setSearchValue(value);
+    if(!movies.length) {
+      onGetMovies();
+    }
+    
   };
 
   useEffect(() => {
@@ -46,6 +56,9 @@ function Movies({ movies }) {
   return (
     <>
       <div className="movies">
+      <SearchForm
+          onSearchSubmit={handleSearchSubmit}
+        />
         <MoviesCardList
           cards={currentMovies}
           onClickMoreButton={handleClickMoreButton}
