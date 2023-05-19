@@ -2,6 +2,7 @@ import movieService from "../../services/movieService";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
+import "./MovieDetails.css";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
 function MovieDetails() {
@@ -46,21 +47,39 @@ function MovieDetails() {
   return (
     <div>
       <Header />
-      <h2>{movie.title}</h2>
-      <p>Rating: {movie.vote_count}</p>
-      <img src={API_IMG + movie.poster_path} alt={movie.title} />
-      <p>Director: {director}</p>
-      <p>{movie.original_language}</p>
-      <p>{movie.overview}</p>
-      <p>{movie.popularity}</p>
-      <p>{movie.release_date}</p>
-      <p>{movie.vote_count}</p>
-      <h3>Cast:</h3>
-      <ul>
-        {cast.map((castMember) => (
-          <li key={castMember.id}>{castMember.name}</li>
-        ))}
-      </ul>
+
+      <div className="details">
+        <div className="details__poster-container">
+          <img
+            className="details__poster"
+            src={API_IMG + movie.poster_path}
+            alt={movie.title}
+          />
+        </div>
+        <div>
+          <h2 className="details__header-title">{movie.title}</h2>
+          <div className="details__container">
+            <p>{movie.release_date}</p>
+            <p>{movie.original_language}</p>
+            <p>{movie.popularity}</p>
+            <p>Rating: {movie.vote_average}</p>
+          </div>
+          <p>
+            <b> Director:</b> <span>{director}</span>
+          </p>
+          <h3>Stars:</h3>
+          <div className="details__cast">
+            {cast.map((castMember, index) => (
+              <React.Fragment key={castMember.name}>
+                {index > 0 && ", "}
+                {castMember.name}
+              </React.Fragment>
+            ))}
+          </div>
+          <h3>About:</h3>
+          <p>{movie.overview}</p>
+        </div>
+      </div>
     </div>
   );
 }
