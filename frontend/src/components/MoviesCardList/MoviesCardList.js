@@ -1,15 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import "./MoviesCardList.css";
-import Preloader from "../Preloader/Preloader";
 
-const MoviesCardList = ({ cards, buttonMore }) => {
-  const [isLoading, setLoading] = useState(false);
-
-  const handlePreloader = () => {
-    setLoading(true);
-  };
-
+const MoviesCardList = ({ cards, buttonMore, onClickMoreButton }) => {
   return (
     <section className="cards">
       <ul className="cards__list">
@@ -18,21 +11,17 @@ const MoviesCardList = ({ cards, buttonMore }) => {
         ))}
       </ul>
 
-      {isLoading ? (
-        <Preloader />
-      ) : (
-        buttonMore && (
-          <div className="cards__button-container">
-            <button
-              className="cards__button"
-              type="button"
-              name="more"
-              onClick={handlePreloader}
-            >
-              More
-            </button>
-          </div>
-        )
+      {buttonMore && (
+        <div className="cards__button-container">
+          <button
+            className="cards__button"
+            type="button"
+            name="more"
+            onClick={onClickMoreButton}
+          >
+            More
+          </button>
+        </div>
       )}
     </section>
   );
