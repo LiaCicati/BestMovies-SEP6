@@ -7,7 +7,7 @@ const Main = () => {
     <>
       <Header />
       <main className="main">
-        <Movies />
+   
       </main>
     </>
   );

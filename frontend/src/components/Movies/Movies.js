@@ -1,11 +1,10 @@
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-import cards from "../../utils/movies";
 
-function Movies() {
+function Movies({ movies }) {
   return (
     <>
       <div className="movies">
-        <MoviesCardList cards={cards} buttonMore={true} />
+        <MoviesCardList cards={movies} buttonMore={true} />
       </div>
     </>
   );

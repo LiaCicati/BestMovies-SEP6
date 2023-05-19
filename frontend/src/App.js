@@ -6,12 +6,14 @@ import Login from "./components/Login/Login";
 import Profile from "./components/Profile/Profile";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import userService from "./services/userService";
+import movieService from "./services/movieService";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import Main from "./components/Main/Main";
+import Movies from "./components/Movies/Movies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [movies, setMovies] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -83,11 +85,31 @@ function App() {
       });
   }
 
+  useEffect(() => {
+    const storedMovies = localStorage.getItem("movies");
+    if (storedMovies) {
+      const parsedMovies = JSON.parse(storedMovies);
+      setMovies(parsedMovies);
+    } else {
+      movieService
+        .getMovies()
+        .then((data) => {
+          console.log(data);
+          const movies = data.results;
+          localStorage.setItem("movies", JSON.stringify(movies));
+          setMovies(movies);
+        })
+        .catch((error) => {
+          console.error("Error fetching movies:", error);
+        });
+    }
+  }, []);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
         <Routes>
-          <Route path="/" element={<Main />}></Route>
+          <Route path="/" element={<Movies movies={movies} />}></Route>
           <Route
             path="/movies/:id"
             element={
