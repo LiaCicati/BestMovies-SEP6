@@ -1,8 +1,10 @@
 const express = require("express");
+const cors = require('cors');
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const routes = require('./routes/index');
+const routes = require("./routes/index");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 const url = process.env.MONGODB_URL;
@@ -13,6 +15,7 @@ mongoose.connect(url, {
   useUnifiedTopology: true,
 });
 
+app.use(cors());
 app.use(express.json());
 
 app.use(routes);
@@ -20,6 +23,8 @@ app.use(routes);
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to root URL of Server");
 });
+
+app.use(errorHandler);
 
 app.listen(port, (error) => {
   if (!error) {
