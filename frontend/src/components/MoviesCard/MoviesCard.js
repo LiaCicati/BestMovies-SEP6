@@ -13,7 +13,11 @@ const MoviesCard = ({ card }) => {
           rel="noreferrer"
         >
           <img
-            src={API_IMG + card.backdrop_path}
+            src={
+              !card.backdrop_path
+                ? API_IMG + card.poster_path
+                : API_IMG + card.backdrop_path
+            }
             alt={card.title}
             className="card__image"
           ></img>

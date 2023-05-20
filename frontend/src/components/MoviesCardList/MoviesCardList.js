@@ -19,7 +19,7 @@ const MoviesCardList = ({ cards, buttonMore, onClickMoreButton }) => {
             name="more"
             onClick={onClickMoreButton}
           >
-            More
+           Load More
           </button>
         </div>
       )}

@@ -1,6 +1,6 @@
 import "./SearchForm.css";
 import { useState } from "react";
-import React from 'react';
+import React from "react";
 const SearchForm = ({ onSearchSubmit }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
@@ -9,14 +9,14 @@ const SearchForm = ({ onSearchSubmit }) => {
     setValue(evt.target.value);
   }
 
-   const removeWhiteSpace = (value) => {
+  const removeWhiteSpace = (value) => {
     return value.trim();
   };
 
   function handleSubmit(evt) {
     evt.preventDefault();
     if (!value) {
-      setError('error');
+      setError("Please enter a search term");
     } else {
       setError("");
       onSearchSubmit(removeWhiteSpace(value));

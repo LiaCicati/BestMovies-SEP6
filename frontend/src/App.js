@@ -37,7 +37,7 @@ function App() {
           console.log(err);
         });
     }
-  }, []);
+  }, [navigate, path]);
 
   useEffect(() => {
     // Execute when the loggedIn state changes

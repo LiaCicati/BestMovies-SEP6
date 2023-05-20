@@ -23,6 +23,15 @@ class MovieService {
       }
     ).then(getResponseData);
   };
+
+  getMovieByTitle = (title) => {
+    return fetch(
+      `https://api.themoviedb.org/3/search/movie?${API_KEY}&query=${title}`,
+      {
+        method: "GET",
+      }
+    ).then(getResponseData);
+  };
 }
 
 const movieServiceInstance = new MovieService();
