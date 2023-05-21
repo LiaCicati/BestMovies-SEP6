@@ -14,6 +14,7 @@ function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [movies, setMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,19 +38,19 @@ function App() {
           console.log(err);
         });
     }
-  }, [navigate, path]);
+  }, []);
 
   useEffect(() => {
-    // Execute when the loggedIn state changes
     if (loggedIn) {
-      // If the user is logged in, retrieve the token from local storage
       const token = localStorage.getItem("token");
-      userService
-        .getUser(token)
-        .then((userData) => {
-          // Upon successful API call, set the currentUser state with received user data
+      Promise.all([
+        userService.getUser(token),
+        userService.getFavoriteMovies(token),
+      ])
+        .then(([userData, movies]) => {
           setCurrentUser(userData);
-          // Store the user data in local storage
+          setSavedMovies(movies);
+          localStorage.setItem("saved-movies", JSON.stringify(movies));
           localStorage.setItem("current-user", JSON.stringify(userData));
         })
         .catch((err) => console.log(err));
@@ -85,11 +86,44 @@ function App() {
       });
   }
 
+  function handleSaveMovie(movie) {
+    userService
+      .likeMovie(movie)
+      .then((savedMovie) => {
+        setSavedMovies([savedMovie, ...savedMovies]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleCardClickButton(movie) {
+    if (!movie.isSaved && !movie._id) {
+      handleSaveMovie(movie);
+      console.log(movie);
+    } else {
+      console.log("deleting");
+    }
+  }
+
+  const checkSavedMovies = (allMovies, savedMovies) => {
+    savedMovies.forEach((savedMovie) => {
+      const movie = allMovies.find((item) => item.title === savedMovie.title);
+
+      // Only set isSaved if a matching movie is found
+      if (movie) {
+        movie.isSaved = true;
+      }
+    });
+
+    return allMovies;
+  };
+
   useEffect(() => {
     const storedMovies = localStorage.getItem("movies");
     if (storedMovies) {
       const parsedMovies = JSON.parse(storedMovies);
-      setMovies(parsedMovies);
+      setMovies(checkSavedMovies(parsedMovies, savedMovies));
     } else {
       movieService
         .getMovies()
@@ -97,19 +131,63 @@ function App() {
           console.log(data);
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
-          setMovies(movies);
+          setMovies(checkSavedMovies(movies, savedMovies));
         })
         .catch((error) => {
           console.error("Error fetching movies:", error);
         });
     }
-  }, []);
+  }, [savedMovies]);
+
+  // Function to fetch movies from the API
+const fetchMovies = () => {
+  movieService
+    .getMovies()
+    .then((data) => {
+      const movies = data.results;
+      localStorage.setItem("movies", JSON.stringify(movies));
+      setMovies(checkSavedMovies(movies, savedMovies));
+    })
+    .catch((error) => {
+      console.error("Error fetching movies:", error);
+    });
+};
+
+// Function to set movies from localStorage
+const setMoviesFromLocalStorage = () => {
+  const storedMovies = localStorage.getItem("movies");
+
+  try {
+    if (storedMovies) {
+      const parsedMovies = JSON.parse(storedMovies);
+      setMovies(checkSavedMovies(parsedMovies, savedMovies));
+    } else {
+      fetchMovies();
+    }
+  } catch (error) {
+    console.error("Error parsing stored movies:", error);
+    fetchMovies();
+  }
+};
+
+useEffect(() => {
+  setMoviesFromLocalStorage();
+}, [savedMovies]);
+
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
         <Routes>
-          <Route path="/" element={<Movies movies={movies} />}></Route>
+          <Route
+            path="/"
+            element={
+              <Movies
+                movies={movies}
+                onCardClickButton={handleCardClickButton}
+              />
+            }
+          ></Route>
           <Route
             path="/movies/:id"
             element={

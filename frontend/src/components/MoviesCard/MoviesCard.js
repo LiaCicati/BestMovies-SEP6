@@ -1,8 +1,18 @@
 import "./MoviesCard.css";
 import { Link } from "react-router-dom";
+import iconLiked from "../../images/liked.svg";
+import iconLike from "../../images/like.svg";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
-const MoviesCard = ({ card }) => {
+const MoviesCard = ({ card, onCardClickButton }) => {
+  const likedMovie = <img src={iconLiked} alt="Liked" />;
+  const likeMovie = <img src={iconLike} alt="Like" />;
+
+  function handleCardClickButton() {
+    onCardClickButton(card);
+    console.log(card);
+  }
+
   return (
     <li className="card">
       <div className="card__image-container">
@@ -22,6 +32,14 @@ const MoviesCard = ({ card }) => {
             className="card__image"
           ></img>
         </a>
+        <button
+          className="card__button"
+          type="button"
+          onClick={handleCardClickButton}
+        >
+          {card.isSaved && likedMovie}
+          {!card.isSaved && likeMovie}
+        </button>
       </div>
       <div className="card__text">
         <Link to={`/movies/${card.id}`}>
