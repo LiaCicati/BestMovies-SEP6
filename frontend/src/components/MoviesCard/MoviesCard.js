@@ -8,7 +8,7 @@ const API_IMG = "https://image.tmdb.org/t/p/w500/";
 const MoviesCard = ({ card, onCardClickButton }) => {
   const location = useLocation();
 
-  const isSavedMoviesPage = location.pathname === "/favorites";
+  const isFavoriteMoviesPage = location.pathname === "/favorites";
   const isMoviesPage = location.pathname === "/";
 
   const likedMovie = <img src={iconLiked} alt="Liked" />;
@@ -45,7 +45,7 @@ const MoviesCard = ({ card, onCardClickButton }) => {
         >
           {isMoviesPage && card.isSaved && likedMovie}
           {isMoviesPage && !card.isSaved && likeMovie}
-          {isSavedMoviesPage && deleteMovie}
+          {isFavoriteMoviesPage && deleteMovie}
         </button>
       </div>
       <div className="card__text">
