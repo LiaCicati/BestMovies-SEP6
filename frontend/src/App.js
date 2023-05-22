@@ -269,13 +269,15 @@ function App() {
           <Route
             path="/favorites"
             element={
-              <FavoriteMovies
-                displayedMovies={savedMovies}
-                searchValue={searchValue}
-                // onSearchSubmit={handleSearchSubmit}
-                onClickMoreButton={handleClickMoreButton}
-                onCardClickButton={handleCardClickButton}
-              />
+              <ProtectedRoute isLoggedIn={loggedIn}>
+                <FavoriteMovies
+                  displayedMovies={savedMovies}
+                  searchValue={searchValue}
+                  // onSearchSubmit={handleSearchSubmit}
+                  onClickMoreButton={handleClickMoreButton}
+                  onCardClickButton={handleCardClickButton}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
