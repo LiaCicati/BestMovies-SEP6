@@ -1,12 +1,19 @@
 import "./MoviesCard.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import iconLiked from "../../images/liked.svg";
 import iconLike from "../../images/like.svg";
+import iconDelete from "../../images/icon-delete.svg";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
 const MoviesCard = ({ card, onCardClickButton }) => {
+  const location = useLocation();
+
+  const isSavedMoviesPage = location.pathname === "/favorites";
+  const isMoviesPage = location.pathname === "/";
+
   const likedMovie = <img src={iconLiked} alt="Liked" />;
   const likeMovie = <img src={iconLike} alt="Like" />;
+  const deleteMovie = <img src={iconDelete} alt="Delete" />;
 
   function handleCardClickButton() {
     onCardClickButton(card);
@@ -36,8 +43,9 @@ const MoviesCard = ({ card, onCardClickButton }) => {
           type="button"
           onClick={handleCardClickButton}
         >
-          {card.isSaved && likedMovie}
-          {!card.isSaved && likeMovie}
+          {isMoviesPage && card.isSaved && likedMovie}
+          {isMoviesPage && !card.isSaved && likeMovie}
+          {isSavedMoviesPage && deleteMovie}
         </button>
       </div>
       <div className="card__text">

@@ -9,6 +9,7 @@ import userService from "./services/userService";
 import movieService from "./services/movieService";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Movies from "./components/Movies/Movies";
+import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
@@ -260,6 +261,18 @@ function App() {
                 displayedMovies={filteredMovies}
                 searchValue={searchValue}
                 onSearchSubmit={handleSearchSubmit}
+                onClickMoreButton={handleClickMoreButton}
+                onCardClickButton={handleCardClickButton}
+              />
+            }
+          />
+          <Route
+            path="/favorites"
+            element={
+              <FavoriteMovies
+                displayedMovies={savedMovies}
+                searchValue={searchValue}
+                // onSearchSubmit={handleSearchSubmit}
                 onClickMoreButton={handleClickMoreButton}
                 onCardClickButton={handleCardClickButton}
               />
