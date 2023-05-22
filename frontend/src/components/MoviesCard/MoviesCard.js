@@ -15,6 +15,8 @@ const MoviesCard = ({ card, onCardClickButton }) => {
   const likeMovie = <img src={iconLike} alt="Like" />;
   const deleteMovie = <img src={iconDelete} alt="Delete" />;
 
+  const loggedInUser = JSON.parse(localStorage.getItem("current-user"));
+
   function handleCardClickButton() {
     onCardClickButton(card);
   }
@@ -38,15 +40,17 @@ const MoviesCard = ({ card, onCardClickButton }) => {
             className="card__image"
           ></img>
         </a>
-        <button
-          className="card__button"
-          type="button"
-          onClick={handleCardClickButton}
-        >
-          {isMoviesPage && card.isSaved && likedMovie}
-          {isMoviesPage && !card.isSaved && likeMovie}
-          {isFavoriteMoviesPage && deleteMovie}
-        </button>
+        {loggedInUser && (
+          <button
+            className="card__button"
+            type="button"
+            onClick={handleCardClickButton}
+          >
+            {isMoviesPage && card.isSaved && likedMovie}
+            {isMoviesPage && !card.isSaved && likeMovie}
+            {isFavoriteMoviesPage && deleteMovie}
+          </button>
+        )}
       </div>
       <div className="card__text">
         <Link to={`/movies/${card.id}`}>
