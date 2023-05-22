@@ -13,11 +13,11 @@ import MovieDetails from "./components/MoviesDetails/MovieDetails";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const [movies, setMovies] = useState([]);
+  const [allMovies, setAllMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [showMore, setShowMore] = useState(false);
-  const [displayedMovies, setDisplayedMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,16 +63,14 @@ function App() {
         if (storedMovies) {
           const parsedMovies = JSON.parse(storedMovies);
           const updatedMovies = checkSavedMovies(parsedMovies, savedMovies);
-          setMovies(updatedMovies);
-          setDisplayedMovies(updatedMovies.slice(0, getMoviesCount())); // Set displayedMovies with updatedMovies
+          setAllMovies(updatedMovies);
           setShowMore(updatedMovies.length > getMoviesCount());
         } else {
           const data = await movieService.getMovies();
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
           const updatedMovies = checkSavedMovies(movies, savedMovies);
-          setMovies(updatedMovies);
-          setDisplayedMovies(updatedMovies.slice(0, getMoviesCount())); // Set displayedMovies with updatedMovies
+          setAllMovies(updatedMovies);
           setShowMore(updatedMovies.length > getMoviesCount());
         }
       } catch (error) {
@@ -114,52 +112,60 @@ function App() {
       });
   }
 
-  const handleSaveMovie = async (movie) => {
-    const isSaved = savedMovies.some((item) => item.id === movie.id);
-
-    if (!isSaved) {
-      const updatedMovie = { ...movie, isSaved: true };
-
-      try {
-        // Call the likeMovie API to save the movie
-        await userService.likeMovie(movie);
-
-        // Update the movie in the savedMovies state
-        setSavedMovies((prevSavedMovies) => [updatedMovie, ...prevSavedMovies]);
-
-        // Update the movie in the displayedMovies state as well
-        setDisplayedMovies((prevDisplayedMovies) => {
-          const updatedDisplayedMovies = prevDisplayedMovies.map((m) =>
-            m.id === movie.id ? updatedMovie : m
-          );
-          return updatedDisplayedMovies;
+  function handleSaveMovie(movie) {
+    userService
+      .likeMovie(movie)
+      .then((savedMovie) => {
+        setSavedMovies((prevSavedMovies) => [savedMovie, ...prevSavedMovies]);
+        updateMovieState(movie, true);
+        setFilteredMovies((prevFilteredMovies) => {
+          const updatedMovies = [...prevFilteredMovies, savedMovie];
+          setShowMore(updatedMovies.length > getMoviesCount());
+          return updatedMovies;
         });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleDeleteMovie(movie) {
+    const movieId = movie.id || movie.movieId;
+    const userMovie = savedMovies.find(
+      (savedMovie) => savedMovie.movieId === movieId
+    );
+    userService
+      .deleteMovie(userMovie._id)
+      .then(() => {
+        const newSavedMovies = savedMovies.filter(
+          (savedMovie) => savedMovie.movieId !== movieId
+        );
+        setSavedMovies(newSavedMovies);
+        updateMovieState(movie, false);
+        setFilteredMovies((prevFilteredMovies) =>
+          prevFilteredMovies.filter(
+            (filteredMovie) => filteredMovie.id !== movie.id
+          )
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function updateMovieState(movie, isSaved) {
+    setAllMovies((prevMovies) =>
+      prevMovies.map((prevMovie) =>
+        prevMovie.id === movie.id ? { ...prevMovie, isSaved } : prevMovie
+      )
+    );
+  }
 
   function handleCardClickButton(movie) {
-    const isSaved = savedMovies.some((item) => item.id === movie.id);
-    if (!isSaved) {
+    if (!movie.isSaved && !movie._id) {
       handleSaveMovie(movie);
-      console.log(movie);
     } else {
-      // Remove the movie from savedMovies and update the displayedMovies
-      const updatedSavedMovies = savedMovies.filter(
-        (item) => item.id !== movie.id
-      );
-      const updatedDisplayedMovies = displayedMovies.map((m) =>
-        m.id === movie.id ? { ...m, isSaved: false } : m
-      );
-
-      setSavedMovies(updatedSavedMovies);
-      setDisplayedMovies(updatedDisplayedMovies);
-      console.log("unliking");
-
-      // Update the savedMovies array in local storage
-      localStorage.setItem("savedMovies", JSON.stringify(updatedSavedMovies));
+      handleDeleteMovie(movie);
     }
   }
 
@@ -175,34 +181,27 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      setDisplayedMovies(movies.slice(0, getMoviesCount()));
+      setFilteredMovies(allMovies.slice(0, getMoviesCount()));
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [movies]);
+  }, [allMovies]);
 
   useEffect(() => {
-    setDisplayedMovies(movies.slice(0, getMoviesCount()));
-    setShowMore(movies.length > getMoviesCount());
-  }, [movies]);
+    setFilteredMovies(allMovies.slice(0, getMoviesCount()));
+    setShowMore(allMovies.length > getMoviesCount());
+  }, [allMovies]);
 
   const getMoviesCount = () => {
     switch (true) {
       case window.innerWidth >= 944:
-        return 9;
+        return 12;
       case window.innerWidth >= 570:
         return 8;
       default:
         return 5;
     }
-  };
-
-  const loadMovies = () => {
-    if (window.innerWidth >= 944) {
-      return 3;
-    }
-    return 2;
   };
 
   const handleSearchSubmit = async (value) => {
@@ -213,30 +212,40 @@ function App() {
         const data = await movieService.getMovieByTitle(value);
         const searchedMovies = data.results;
 
-        setDisplayedMovies(searchedMovies.slice(0, getMoviesCount()));
+        setFilteredMovies(searchedMovies.slice(0, getMoviesCount()));
         setShowMore(searchedMovies.length > getMoviesCount());
 
-        setMovies(checkSavedMovies(searchedMovies, savedMovies));
+        setAllMovies(checkSavedMovies(searchedMovies, savedMovies));
       } catch (error) {
         console.error("Error searching movies:", error);
       }
     } else {
-      setDisplayedMovies(movies.slice(0, getMoviesCount()));
-      setShowMore(movies.length > getMoviesCount());
+      setFilteredMovies(allMovies.slice(0, getMoviesCount()));
+      setShowMore(allMovies.length > getMoviesCount());
 
-      setMovies(checkSavedMovies(movies, savedMovies));
+      setAllMovies(checkSavedMovies(allMovies, savedMovies));
     }
   };
 
   const handleClickMoreButton = () => {
     const loadCount = loadMovies();
-    const nextBatch = movies.slice(
-      displayedMovies.length,
-      displayedMovies.length + loadCount
+    const nextBatch = allMovies.slice(
+      filteredMovies.length,
+      filteredMovies.length + loadCount
     );
 
-    setDisplayedMovies((prevMovies) => [...prevMovies, ...nextBatch]);
-    setShowMore(displayedMovies.length + loadCount < movies.length);
+    setFilteredMovies((prevFilteredMovies) => [
+      ...prevFilteredMovies,
+      ...nextBatch,
+    ]);
+    setShowMore(filteredMovies.length + loadCount < allMovies.length);
+  };
+
+  const loadMovies = () => {
+    if (window.innerWidth >= 944) {
+      return 3;
+    }
+    return 2;
   };
 
   return (
@@ -248,7 +257,7 @@ function App() {
             element={
               <Movies
                 showMore={showMore}
-                displayedMovies={displayedMovies}
+                displayedMovies={filteredMovies}
                 searchValue={searchValue}
                 onSearchSubmit={handleSearchSubmit}
                 onClickMoreButton={handleClickMoreButton}

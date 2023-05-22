@@ -10,7 +10,6 @@ const MoviesCard = ({ card, onCardClickButton }) => {
 
   function handleCardClickButton() {
     onCardClickButton(card);
-    console.log(card);
   }
 
   return (
