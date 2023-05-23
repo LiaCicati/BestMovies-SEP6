@@ -46,8 +46,8 @@ const MoviesCard = ({ card, onCardClickButton }) => {
             type="button"
             onClick={handleCardClickButton}
           >
-            {isMoviesPage && card.isSaved && likedMovie}
-            {isMoviesPage && !card.isSaved && likeMovie}
+            {isMoviesPage && card.isFavorite && likedMovie}
+            {isMoviesPage && !card.isFavorite && likeMovie}
             {isFavoriteMoviesPage && deleteMovie}
           </button>
         )}

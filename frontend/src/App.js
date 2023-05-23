@@ -15,7 +15,7 @@ function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [allMovies, setAllMovies] = useState([]);
-  const [savedMovies, setSavedMovies] = useState([]);
+  const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [showMore, setShowMore] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
@@ -47,40 +47,43 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    const fetchMoviesAndSavedMovies = async () => {
+    const fetchMoviesAndFavoriteMovies = async () => {
       try {
-        const [userData, savedMovies] = await Promise.all([
+        const [userData, favoriteMovies] = await Promise.all([
           userService.getUser(token),
           userService.getFavoriteMovies(token),
         ]);
 
         setCurrentUser(userData);
-        setSavedMovies(savedMovies);
-        localStorage.setItem("saved-movies", JSON.stringify(savedMovies));
+        setFavoriteMovies(favoriteMovies);
+        localStorage.setItem("favorite-movies", JSON.stringify(favoriteMovies));
         localStorage.setItem("current-user", JSON.stringify(userData));
 
         const storedMovies = localStorage.getItem("movies");
 
         if (storedMovies) {
           const parsedMovies = JSON.parse(storedMovies);
-          const updatedMovies = checkSavedMovies(parsedMovies, savedMovies);
+          const updatedMovies = checkFavoriteMovies(
+            parsedMovies,
+            favoriteMovies
+          );
           setAllMovies(updatedMovies);
           setShowMore(updatedMovies.length > getMoviesCount());
         } else {
           const data = await movieService.getMovies();
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
-          const updatedMovies = checkSavedMovies(movies, savedMovies);
+          const updatedMovies = checkFavoriteMovies(movies, favoriteMovies);
           setAllMovies(updatedMovies);
           setShowMore(updatedMovies.length > getMoviesCount());
         }
       } catch (error) {
-        console.error("Error fetching movies and saved movies:", error);
+        console.error("Error fetching movies and favorite movies:", error);
       }
     };
 
     if (loggedIn) {
-      fetchMoviesAndSavedMovies();
+      fetchMoviesAndFavoriteMovies();
     }
   }, [loggedIn]);
 
@@ -113,14 +116,17 @@ function App() {
       });
   }
 
-  function handleSaveMovie(movie) {
+  function handleAddMovie(movie) {
     userService
       .likeMovie(movie)
-      .then((savedMovie) => {
-        setSavedMovies((prevSavedMovies) => [savedMovie, ...prevSavedMovies]);
+      .then((favoriteMovie) => {
+        setFavoriteMovies((prevFavoriteMovies) => [
+          favoriteMovie,
+          ...prevFavoriteMovies,
+        ]);
         updateMovieState(movie, true);
         setFilteredMovies((prevFilteredMovies) => {
-          const updatedMovies = [...prevFilteredMovies, savedMovie];
+          const updatedMovies = [...prevFilteredMovies, favoriteMovie];
           setShowMore(updatedMovies.length > getMoviesCount());
           return updatedMovies;
         });
@@ -132,16 +138,16 @@ function App() {
 
   function handleDeleteMovie(movie) {
     const movieId = movie.id || movie.movieId;
-    const userMovie = savedMovies.find(
-      (savedMovie) => savedMovie.movieId === movieId
+    const userMovie = favoriteMovies.find(
+      (favoriteMovie) => favoriteMovie.movieId === movieId
     );
     userService
       .deleteMovie(userMovie._id)
       .then(() => {
-        const newSavedMovies = savedMovies.filter(
-          (savedMovie) => savedMovie.movieId !== movieId
+        const newFavoriteMovies = favoriteMovies.filter(
+          (favoriteMovie) => favoriteMovie.movieId !== movieId
         );
-        setSavedMovies(newSavedMovies);
+        setFavoriteMovies(newFavoriteMovies);
         updateMovieState(movie, false);
         setFilteredMovies((prevFilteredMovies) =>
           prevFilteredMovies.filter(
@@ -154,27 +160,29 @@ function App() {
       });
   }
 
-  function updateMovieState(movie, isSaved) {
+  function updateMovieState(movie, isFavorite) {
     setAllMovies((prevMovies) =>
       prevMovies.map((prevMovie) =>
-        prevMovie.id === movie.id ? { ...prevMovie, isSaved } : prevMovie
+        prevMovie.id === movie.id ? { ...prevMovie, isFavorite } : prevMovie
       )
     );
   }
 
   function handleCardClickButton(movie) {
-    if (!movie.isSaved && !movie._id) {
-      handleSaveMovie(movie);
+    if (!movie.isFavorite && !movie._id) {
+      handleAddMovie(movie);
     } else {
       handleDeleteMovie(movie);
     }
   }
 
-  const checkSavedMovies = (allMovies, savedMovies) => {
-    savedMovies.forEach((savedMovie) => {
-      const movie = allMovies.find((item) => item.title === savedMovie.title);
+  const checkFavoriteMovies = (allMovies, favoriteMovies) => {
+    favoriteMovies.forEach((favoriteMovie) => {
+      const movie = allMovies.find(
+        (item) => item.title === favoriteMovie.title
+      );
       if (movie) {
-        movie.isSaved = true;
+        movie.isFavorite = true;
       }
     });
     return allMovies;
@@ -216,7 +224,7 @@ function App() {
         setFilteredMovies(searchedMovies.slice(0, getMoviesCount()));
         setShowMore(searchedMovies.length > getMoviesCount());
 
-        setAllMovies(checkSavedMovies(searchedMovies, savedMovies));
+        setAllMovies(checkFavoriteMovies(searchedMovies, favoriteMovies));
       } catch (error) {
         console.error("Error searching movies:", error);
       }
@@ -224,7 +232,7 @@ function App() {
       setFilteredMovies(allMovies.slice(0, getMoviesCount()));
       setShowMore(allMovies.length > getMoviesCount());
 
-      setAllMovies(checkSavedMovies(allMovies, savedMovies));
+      setAllMovies(checkFavoriteMovies(allMovies, favoriteMovies));
     }
   };
 
@@ -271,9 +279,7 @@ function App() {
             element={
               <ProtectedRoute isLoggedIn={loggedIn}>
                 <FavoriteMovies
-                  displayedMovies={savedMovies}
-                  searchValue={searchValue}
-                  // onSearchSubmit={handleSearchSubmit}
+                  favoriteMovies={favoriteMovies}
                   onClickMoreButton={handleClickMoreButton}
                   onCardClickButton={handleCardClickButton}
                 />
