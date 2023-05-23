@@ -53,9 +53,15 @@ const MoviesCard = ({ card, onCardClickButton }) => {
         )}
       </div>
       <div className="card__text">
-        <Link to={`/movies/${card.id}`}>
-          <h3 className="card__title">{card.title}</h3>
-        </Link>
+        {isFavoriteMoviesPage ? (
+          <Link to={`/favorites/${card._id}`}>
+            <h3 className="card__title">{card.title}</h3>
+          </Link>
+        ) : (
+          <Link to={`/movies/${card.id}`}>
+            <h3 className="card__title">{card.title}</h3>
+          </Link>
+        )}
         <span className="card__rating">{card.vote_average}</span>
       </div>
     </li>

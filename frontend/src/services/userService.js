@@ -82,6 +82,18 @@ class UserService {
       },
     }).then(checkResponse);
   }
+
+  getFavoriteMovieDetails(movieId) {
+    const token = localStorage.getItem("token");
+    return fetch(`${BASE_URL}/movies/${movieId}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(checkResponse);
+  }
 }
 
 const userServiceInstance = new UserService();

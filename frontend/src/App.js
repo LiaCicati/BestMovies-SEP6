@@ -280,6 +280,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/favorites/:id"
+            element={
+              <ProtectedRoute isLoggedIn={loggedIn}>
+                <MovieDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/movies/:id"
             element={
