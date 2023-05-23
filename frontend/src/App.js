@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Movies from "./components/Movies/Movies";
 import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
+import Statistics from "./components/Statistics/Statistics";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -316,6 +317,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/statistics"
+            element={
+              <>
+                <Statistics />
+              </>
+            } />
         </Routes>
       </div>
     </CurrentUserContext.Provider>
