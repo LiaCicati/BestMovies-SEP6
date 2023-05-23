@@ -2,12 +2,21 @@ import React from "react";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import "./MoviesCardList.css";
 
-const MoviesCardList = ({ cards, buttonMore, onClickMoreButton }) => {
+const MoviesCardList = ({
+  cards,
+  buttonMore,
+  onClickMoreButton,
+  onCardClickButton,
+}) => {
   return (
     <section className="cards">
       <ul className="cards__list">
         {cards.map((card) => (
-          <MoviesCard key={card.id} card={card} />
+          <MoviesCard
+            key={card.id}
+            card={card}
+            onCardClickButton={onCardClickButton}
+          />
         ))}
       </ul>
 
@@ -19,7 +28,7 @@ const MoviesCardList = ({ cards, buttonMore, onClickMoreButton }) => {
             name="more"
             onClick={onClickMoreButton}
           >
-           Load More
+            Load More
           </button>
         </div>
       )}

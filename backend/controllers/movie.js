@@ -78,6 +78,19 @@ class MovieController {
       .then((movie) => res.send(movie))
       .catch(next);
   };
+
+  getMovieById = (req, res, next) => {
+    const { movieId } = req.params;
+    this.movieRepository
+      .findMovieById(movieId)
+      .then((movie) => {
+        if (!movie) {
+          throw new NotFoundError("Movie not found");
+        }
+        res.send(movie);
+      })
+      .catch(next);
+  };
 }
 const movieController = new MovieController(movieRepository);
 module.exports = movieController;
