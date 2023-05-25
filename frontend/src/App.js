@@ -122,7 +122,7 @@ function App() {
           setIsInfoTooltipOpen(true);
           setTooltipImage(success);
           onLogin(email, password);
-          setMessage("success");
+          setMessage("You have successfully registered!");
           navigate("/profile");
         }
       })
