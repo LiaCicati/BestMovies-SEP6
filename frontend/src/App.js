@@ -72,7 +72,7 @@ function App() {
 
         if (storedMovies) {
           const parsedMovies = JSON.parse(storedMovies);
-          const updatedMovies = checkFavoriteMovies(
+          const updatedMovies = utils.checkFavoriteMovies(
             parsedMovies,
             favoriteMovies
           );
@@ -82,7 +82,7 @@ function App() {
           const data = await movieService.getMovies();
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
-          const updatedMovies = checkFavoriteMovies(movies, favoriteMovies);
+          const updatedMovies = utils.checkFavoriteMovies(movies, favoriteMovies);
           setAllMovies(updatedMovies);
           setShowMore(updatedMovies.length > utils.getMoviesCount());
         }
@@ -194,18 +194,6 @@ function App() {
     }
   }
 
-  const checkFavoriteMovies = (allMovies, favoriteMovies) => {
-    favoriteMovies.forEach((favoriteMovie) => {
-      const movie = allMovies.find(
-        (item) => item.title === favoriteMovie.title
-      );
-      if (movie) {
-        movie.isFavorite = true;
-      }
-    });
-    return allMovies;
-  };
-
   useEffect(() => {
     const handleResize = () => {
       setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
@@ -231,7 +219,7 @@ function App() {
         setFilteredMovies(searchedMovies.slice(0, utils.getMoviesCount()));
         setShowMore(searchedMovies.length > utils.getMoviesCount());
 
-        setAllMovies(checkFavoriteMovies(searchedMovies, favoriteMovies));
+        setAllMovies(utils.checkFavoriteMovies(searchedMovies, favoriteMovies));
       } catch (error) {
         console.error("Error searching movies:", error);
       }
@@ -239,7 +227,7 @@ function App() {
       setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
       setShowMore(allMovies.length > utils.getMoviesCount());
 
-      setAllMovies(checkFavoriteMovies(allMovies, favoriteMovies));
+      setAllMovies(utils.checkFavoriteMovies(allMovies, favoriteMovies));
     }
   };
 

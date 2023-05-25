@@ -16,6 +16,18 @@ export const loadMovies = () => {
   return 2;
 };
 
+export const checkFavoriteMovies = (allMovies, favoriteMovies) => {
+  favoriteMovies.forEach((favoriteMovie) => {
+    const movie = allMovies.find(
+      (item) => item.title === favoriteMovie.title
+    );
+    if (movie) {
+      movie.isFavorite = true;
+    }
+  });
+  return allMovies;
+};
+
 export const getErrors = (err) => {
   if (err === "Error: 400" || err.message === "Error: 400")
     return "The data provided is invalid. Please check the information you provided and try again.";
