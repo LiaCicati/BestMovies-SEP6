@@ -32,6 +32,27 @@ class MovieService {
       }
     ).then(getResponseData);
   };
+
+  getMoviesGenres = () => {
+    return fetch("https://api.themoviedb.org/3/genre/movie/list?" + API_KEY, {
+      method: "GET",
+    }).then(getResponseData);
+  };
+
+  getMoviesByActor = (actorId) => {
+    return fetch(
+      `https://api.themoviedb.org/3/person/${actorId}/movie_credits?${API_KEY}`,
+      {
+        method: "GET",
+      }
+    ).then(getResponseData);
+  };
+
+  getPopularActors = () => {
+    return fetch("https://api.themoviedb.org/3/person/popular?" + API_KEY, {
+      method: "GET",
+    }).then(getResponseData);
+  };
 }
 
 const movieServiceInstance = new MovieService();
