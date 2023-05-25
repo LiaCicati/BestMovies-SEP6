@@ -12,6 +12,9 @@ import Movies from "./components/Movies/Movies";
 import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 import Statistics from "./components/Statistics/Statistics";
+import InfoTooltip from "./components/InfoToolTip/InfoToolTip";
+import success from "./images/success.png";
+import fail from "./images/fail.png";
 import * as utils from "./utils/utils";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
@@ -21,6 +24,9 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [showMore, setShowMore] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [tooltipImage, setTooltipImage] = useState("");
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,7 +56,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    const fetchMoviesAndFavoriteMovies = async () => {
+    const getUserDataAndFavoriteMovies = async () => {
       try {
         const [userData, favoriteMovies] = await Promise.all([
           userService.getUser(token),
@@ -81,12 +87,12 @@ function App() {
           setShowMore(updatedMovies.length > utils.getMoviesCount());
         }
       } catch (error) {
-        console.error("Error fetching movies and favorite movies:", error);
+        console.error("Error fetching user data and favorite movies:", error);
       }
     };
 
     if (loggedIn) {
-      fetchMoviesAndFavoriteMovies();
+      getUserDataAndFavoriteMovies();
     }
   }, [loggedIn]);
 
@@ -101,6 +107,9 @@ function App() {
         }
       })
       .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setTooltipImage(fail);
+        setMessage(utils.getErrors(err));
         console.log(err);
       });
   }
@@ -110,11 +119,17 @@ function App() {
       .registerUser(name, email, password)
       .then((res) => {
         if (res.email) {
+          setIsInfoTooltipOpen(true);
+          setTooltipImage(success);
           onLogin(email, password);
+          setMessage("success");
           navigate("/profile");
         }
       })
       .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setTooltipImage(fail);
+        setMessage(utils.getErrors(err));
         console.log(err);
       });
   }
@@ -242,6 +257,31 @@ function App() {
     setShowMore(filteredMovies.length + loadCount < allMovies.length);
   };
 
+  function closeAllModals() {
+    setIsInfoTooltipOpen(false);
+  }
+
+  function handlerEscClose(evt) {
+    if (evt.key === "Escape") {
+      closeAllModals();
+    }
+  }
+
+  function closeByOverlay(evt) {
+    if (evt.target.classList.contains("modal-tooltip")) {
+      closeAllModals();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", handlerEscClose);
+    document.addEventListener("click", closeByOverlay);
+    return () => {
+      document.removeEventListener("keydown", handlerEscClose);
+      document.removeEventListener("click", closeByOverlay);
+    };
+  });
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
@@ -310,6 +350,12 @@ function App() {
             }
           />
         </Routes>
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllModals}
+          image={tooltipImage}
+          message={message}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
