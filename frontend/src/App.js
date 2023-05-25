@@ -12,6 +12,10 @@ import Movies from "./components/Movies/Movies";
 import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 import Statistics from "./components/Statistics/Statistics";
+import InfoTooltip from "./components/InfoToolTip/InfoToolTip";
+import success from "./images/success.png";
+import fail from "./images/fail.png";
+import * as utils from "./utils/utils";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -20,6 +24,9 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [showMore, setShowMore] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [tooltipImage, setTooltipImage] = useState("");
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,7 +56,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    const fetchMoviesAndFavoriteMovies = async () => {
+    const getUserDataAndFavoriteMovies = async () => {
       try {
         const [userData, favoriteMovies] = await Promise.all([
           userService.getUser(token),
@@ -65,27 +72,27 @@ function App() {
 
         if (storedMovies) {
           const parsedMovies = JSON.parse(storedMovies);
-          const updatedMovies = checkFavoriteMovies(
+          const updatedMovies = utils.checkFavoriteMovies(
             parsedMovies,
             favoriteMovies
           );
           setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > getMoviesCount());
+          setShowMore(updatedMovies.length > utils.getMoviesCount());
         } else {
           const data = await movieService.getMovies();
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
-          const updatedMovies = checkFavoriteMovies(movies, favoriteMovies);
+          const updatedMovies = utils.checkFavoriteMovies(movies, favoriteMovies);
           setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > getMoviesCount());
+          setShowMore(updatedMovies.length > utils.getMoviesCount());
         }
       } catch (error) {
-        console.error("Error fetching movies and favorite movies:", error);
+        console.error("Error fetching user data and favorite movies:", error);
       }
     };
 
     if (loggedIn) {
-      fetchMoviesAndFavoriteMovies();
+      getUserDataAndFavoriteMovies();
     }
   }, [loggedIn]);
 
@@ -100,6 +107,9 @@ function App() {
         }
       })
       .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setTooltipImage(fail);
+        setMessage(utils.getErrors(err));
         console.log(err);
       });
   }
@@ -109,11 +119,17 @@ function App() {
       .registerUser(name, email, password)
       .then((res) => {
         if (res.email) {
+          setIsInfoTooltipOpen(true);
+          setTooltipImage(success);
           onLogin(email, password);
+          setMessage("You have successfully registered!");
           navigate("/profile");
         }
       })
       .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setTooltipImage(fail);
+        setMessage(utils.getErrors(err));
         console.log(err);
       });
   }
@@ -129,7 +145,7 @@ function App() {
         updateMovieState(movie, true);
         setFilteredMovies((prevFilteredMovies) => {
           const updatedMovies = [...prevFilteredMovies, favoriteMovie];
-          setShowMore(updatedMovies.length > getMoviesCount());
+          setShowMore(updatedMovies.length > utils.getMoviesCount());
           return updatedMovies;
         });
       })
@@ -178,21 +194,9 @@ function App() {
     }
   }
 
-  const checkFavoriteMovies = (allMovies, favoriteMovies) => {
-    favoriteMovies.forEach((favoriteMovie) => {
-      const movie = allMovies.find(
-        (item) => item.title === favoriteMovie.title
-      );
-      if (movie) {
-        movie.isFavorite = true;
-      }
-    });
-    return allMovies;
-  };
-
   useEffect(() => {
     const handleResize = () => {
-      setFilteredMovies(allMovies.slice(0, getMoviesCount()));
+      setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
     };
 
     window.addEventListener("resize", handleResize);
@@ -200,20 +204,9 @@ function App() {
   }, [allMovies]);
 
   useEffect(() => {
-    setFilteredMovies(allMovies.slice(0, getMoviesCount()));
-    setShowMore(allMovies.length > getMoviesCount());
+    setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
+    setShowMore(allMovies.length > utils.getMoviesCount());
   }, [allMovies]);
-
-  const getMoviesCount = () => {
-    switch (true) {
-      case window.innerWidth >= 944:
-        return 12;
-      case window.innerWidth >= 570:
-        return 8;
-      default:
-        return 5;
-    }
-  };
 
   const handleSearchSubmit = async (value) => {
     setSearchValue(value.trim());
@@ -223,23 +216,23 @@ function App() {
         const data = await movieService.getMovieByTitle(value);
         const searchedMovies = data.results;
 
-        setFilteredMovies(searchedMovies.slice(0, getMoviesCount()));
-        setShowMore(searchedMovies.length > getMoviesCount());
+        setFilteredMovies(searchedMovies.slice(0, utils.getMoviesCount()));
+        setShowMore(searchedMovies.length > utils.getMoviesCount());
 
-        setAllMovies(checkFavoriteMovies(searchedMovies, favoriteMovies));
+        setAllMovies(utils.checkFavoriteMovies(searchedMovies, favoriteMovies));
       } catch (error) {
         console.error("Error searching movies:", error);
       }
     } else {
-      setFilteredMovies(allMovies.slice(0, getMoviesCount()));
-      setShowMore(allMovies.length > getMoviesCount());
+      setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
+      setShowMore(allMovies.length > utils.getMoviesCount());
 
-      setAllMovies(checkFavoriteMovies(allMovies, favoriteMovies));
+      setAllMovies(utils.checkFavoriteMovies(allMovies, favoriteMovies));
     }
   };
 
   const handleClickMoreButton = () => {
-    const loadCount = loadMovies();
+    const loadCount = utils.loadMovies();
     const nextBatch = allMovies.slice(
       filteredMovies.length,
       filteredMovies.length + loadCount
@@ -252,12 +245,30 @@ function App() {
     setShowMore(filteredMovies.length + loadCount < allMovies.length);
   };
 
-  const loadMovies = () => {
-    if (window.innerWidth >= 944) {
-      return 3;
+  function closeAllModals() {
+    setIsInfoTooltipOpen(false);
+  }
+
+  function handlerEscClose(evt) {
+    if (evt.key === "Escape") {
+      closeAllModals();
     }
-    return 2;
-  };
+  }
+
+  function closeByOverlay(evt) {
+    if (evt.target.classList.contains("modal-tooltip")) {
+      closeAllModals();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", handlerEscClose);
+    document.addEventListener("click", closeByOverlay);
+    return () => {
+      document.removeEventListener("keydown", handlerEscClose);
+      document.removeEventListener("click", closeByOverlay);
+    };
+  });
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -327,6 +338,12 @@ function App() {
             }
           />
         </Routes>
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllModals}
+          image={tooltipImage}
+          message={message}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
