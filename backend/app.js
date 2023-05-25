@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors');
+const { errors } = require('celebrate');
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -19,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(routes);
-
+app.use(errors());
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to root URL of Server");
 });
