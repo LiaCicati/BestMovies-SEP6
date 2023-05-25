@@ -43,6 +43,7 @@ function App() {
     };
 
     checkUserToken();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -323,7 +324,8 @@ function App() {
               <>
                 <Statistics />
               </>
-            } />
+            }
+          />
         </Routes>
       </div>
     </CurrentUserContext.Provider>
