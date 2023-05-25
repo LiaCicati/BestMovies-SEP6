@@ -1,0 +1,19 @@
+.details {
+  display: flex;
+  margin-top: 80px;
+}
+
+.details__container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 50%;
+}
+
+.details__poster {
+  width: 400px;
+  height: 600px;
+}
+
+.details__poster-container {
+  margin-right: 20px;
+}

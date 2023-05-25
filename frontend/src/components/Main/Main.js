@@ -1,4 +1,5 @@
 import Header from "../Header/Header";
+import Movies from '../Movies/Movies'
 import React from 'react';
 const Main = () => {
   
@@ -6,6 +7,7 @@ const Main = () => {
     <>
       <Header />
       <main className="main">
+   
       </main>
     </>
   );
