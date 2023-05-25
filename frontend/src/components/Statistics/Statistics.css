@@ -1,0 +1,40 @@
+.back-button {
+  align-self: self-start;
+  background: #855cf8;
+  color: #fff;
+  border-radius: 3px;
+  padding: 8px 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  opacity: 0.8;
+}
+
+.statistics {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statistics__result {
+  padding: 4px 7px;
+  color: #fff;
+  background-color: #855cf8;
+  border-radius: 4px;
+}
+
+.statistics__paragraph {
+  font-size: 18px;
+}
+
+.statistics__subtitle {
+  font-size: 20px;
+}
+
+.statistics__rating {
+  margin-bottom: 40px;
+}

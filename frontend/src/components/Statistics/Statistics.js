@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./Statistics.css";
 import {
   BarChart,
   Bar,
@@ -9,23 +10,26 @@ import {
   Legend,
 } from "recharts";
 import movieService from "../../services/movieService";
-
+import ActorCardList from "../ActorCardList/ActorCardList";
 const Statistics = () => {
   const [actors, setActors] = useState([]);
   const [selectedActorId, setSelectedActorId] = useState("");
+  const [selectedActorName, setSelectedActorName] = useState("");
   const [movies, setMovies] = useState([]);
   const [averageRating, setAverageRating] = useState(null);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [genres, setGenres] = useState([]);
+  const [showStatistics, setShowStatistics] = useState(false);
 
   // Load actors data from local storage or fetch from API
   useEffect(() => {
     const fetchActors = async () => {
       try {
         const response = await movieService.getPopularActors();
-        const actorData = response.results;
-        console.log(actorData);
-        console.log(response);
+        const actorData = response.results.filter(
+          (actor) => actor.known_for_department === "Acting"
+        );
+
         setActors(actorData);
         localStorage.setItem("actors", JSON.stringify(actorData));
       } catch (error) {
@@ -109,11 +113,6 @@ const Statistics = () => {
     }
   }, [selectedActorId, genres]);
 
-  const handleActorChange = (event) => {
-    const selectedId = event.target.value;
-    setSelectedActorId(selectedId);
-  };
-
   const prepareGenreData = () => {
     const genreData = {};
 
@@ -149,68 +148,103 @@ const Statistics = () => {
 
   const topGenres = getTopGenres();
 
+  const handleActorCardClick = (actor) => {
+    setSelectedActorId(actor.id);
+    setSelectedActorName(actor.name);
+    setShowStatistics(true);
+  };
+
+  const handleBackButtonClick = () => {
+    setSelectedActorId("");
+    setShowStatistics(false);
+  };
+
   return (
-    <div>
-      <h2>Actor Statistics</h2>
-      <select value={selectedActorId} onChange={handleActorChange}>
-        <option value="">Select an actor</option>
-        {actors.map((actor) => (
-          <option key={actor.id} value={actor.id}>
-            {actor.name}
-          </option>
-        ))}
-      </select>
-      {showNoDataMessage && (
-        <p>No movie data available for the selected actor.</p>
+    <div className="statistics">
+      <h2 className="statistics__title">Actor Statistics</h2>
+      {!showStatistics && (
+        <ActorCardList
+          cards={actors}
+          onCardClickButton={handleActorCardClick}
+        />
       )}
-      {movies.length > 0 && !showNoDataMessage && (
-        <div>
-          <h3>Actor Rating</h3>
-          <BarChart width={600} height={300} data={movies}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="title"
-              interval={0}
-              tick={null}
-              angle={-45}
-              textAnchor="end"
-              height={100}
-            />
-            <YAxis domain={[0, 10]} />
-            <Tooltip />
-            <Legend />
-            <Bar
-              dataKey="vote_average"
-              fill="#8884d8"
-              name="Average Rating of a movie"
-            />
-          </BarChart>
-          {/* ... */}
-          {averageRating && (
-            <p>Average Rating of all movies the actor stared in: {averageRating}</p>
-          )}
-          <h3>Genres</h3>
-          <BarChart width={600} height={300} data={prepareGenreData()}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="genre"
-              interval={0}
-              angle={-45}
-              textAnchor="end"
-              height={100}
-            />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" fill="#82ca9d" name="Number of Movies" />
-          </BarChart>
-        </div>
-      )}
-      {topGenres.length > 0 && (
-        <p>
-          Top 3 genres the actor is mostly associated with:{" "}
-          {topGenres.join(", ")}
-        </p>
+
+      {showStatistics && (
+        <>
+          <button className="back-button" onClick={handleBackButtonClick}>
+            Back
+          </button>
+          <div>
+            {showNoDataMessage && (
+              <p>No movie data available for the selected actor.</p>
+            )}
+            {movies.length > 0 && !showNoDataMessage && (
+              <div>
+                <h2> {selectedActorName} </h2>
+                <div className="statistics__rating">
+                  <h3 className="statistics__subtitle">
+                    Average rating of all movies
+                  </h3>
+                  <BarChart width={700} height={400} data={movies}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="title"
+                      interval={0}
+                      tick={null}
+                      angle={-45}
+                      textAnchor="end"
+                      height={50}
+                    />
+                    <YAxis domain={[0, 10]} />
+                    <Tooltip />
+                    <Legend layout="vertical" />
+                    <Bar
+                      dataKey="vote_average"
+                      fill="#8884d8"
+                      name="Average Rating of a movie"
+                    />
+                  </BarChart>
+                  {averageRating && (
+                    <p className="statistics__paragraph">
+                      <b>
+                        Average Rating of all the movies {selectedActorName}{" "}
+                        starred in:
+                      </b>{" "}
+                      <span className="statistics__result">
+                        {averageRating}{" "}
+                      </span>{" "}
+                    </p>
+                  )}
+                </div>
+                <h3 className="statistics__subtitle">Genres</h3>
+                <BarChart width={700} height={400} data={prepareGenreData()}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="genre"
+                    interval={0}
+                    angle={-45}
+                    textAnchor="end"
+                    height={100}
+                  />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count" fill="#82ca9d" name="Number of Movies" />
+                </BarChart>
+              </div>
+            )}
+            {topGenres.length > 0 && (
+              <p className="statistics__paragraph">
+                <b>
+                  Top 3 genres {selectedActorName} is mostly associated with:{" "}
+                </b>
+                <span className="statistics__result">
+                  {topGenres.join(", ")}
+                </span>
+              </p>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
