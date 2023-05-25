@@ -12,6 +12,7 @@ import Movies from "./components/Movies/Movies";
 import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 import Statistics from "./components/Statistics/Statistics";
+import * as utils from "./utils/utils";
 function App() {
   const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -70,14 +71,14 @@ function App() {
             favoriteMovies
           );
           setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > getMoviesCount());
+          setShowMore(updatedMovies.length > utils.getMoviesCount());
         } else {
           const data = await movieService.getMovies();
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
           const updatedMovies = checkFavoriteMovies(movies, favoriteMovies);
           setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > getMoviesCount());
+          setShowMore(updatedMovies.length > utils.getMoviesCount());
         }
       } catch (error) {
         console.error("Error fetching movies and favorite movies:", error);
@@ -129,7 +130,7 @@ function App() {
         updateMovieState(movie, true);
         setFilteredMovies((prevFilteredMovies) => {
           const updatedMovies = [...prevFilteredMovies, favoriteMovie];
-          setShowMore(updatedMovies.length > getMoviesCount());
+          setShowMore(updatedMovies.length > utils.getMoviesCount());
           return updatedMovies;
         });
       })
@@ -192,7 +193,7 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      setFilteredMovies(allMovies.slice(0, getMoviesCount()));
+      setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
     };
 
     window.addEventListener("resize", handleResize);
@@ -200,20 +201,9 @@ function App() {
   }, [allMovies]);
 
   useEffect(() => {
-    setFilteredMovies(allMovies.slice(0, getMoviesCount()));
-    setShowMore(allMovies.length > getMoviesCount());
+    setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
+    setShowMore(allMovies.length > utils.getMoviesCount());
   }, [allMovies]);
-
-  const getMoviesCount = () => {
-    switch (true) {
-      case window.innerWidth >= 944:
-        return 12;
-      case window.innerWidth >= 570:
-        return 8;
-      default:
-        return 5;
-    }
-  };
 
   const handleSearchSubmit = async (value) => {
     setSearchValue(value.trim());
@@ -223,23 +213,23 @@ function App() {
         const data = await movieService.getMovieByTitle(value);
         const searchedMovies = data.results;
 
-        setFilteredMovies(searchedMovies.slice(0, getMoviesCount()));
-        setShowMore(searchedMovies.length > getMoviesCount());
+        setFilteredMovies(searchedMovies.slice(0, utils.getMoviesCount()));
+        setShowMore(searchedMovies.length > utils.getMoviesCount());
 
         setAllMovies(checkFavoriteMovies(searchedMovies, favoriteMovies));
       } catch (error) {
         console.error("Error searching movies:", error);
       }
     } else {
-      setFilteredMovies(allMovies.slice(0, getMoviesCount()));
-      setShowMore(allMovies.length > getMoviesCount());
+      setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
+      setShowMore(allMovies.length > utils.getMoviesCount());
 
       setAllMovies(checkFavoriteMovies(allMovies, favoriteMovies));
     }
   };
 
   const handleClickMoreButton = () => {
-    const loadCount = loadMovies();
+    const loadCount = utils.loadMovies();
     const nextBatch = allMovies.slice(
       filteredMovies.length,
       filteredMovies.length + loadCount
@@ -250,13 +240,6 @@ function App() {
       ...nextBatch,
     ]);
     setShowMore(filteredMovies.length + loadCount < allMovies.length);
-  };
-
-  const loadMovies = () => {
-    if (window.innerWidth >= 944) {
-      return 3;
-    }
-    return 2;
   };
 
   return (
