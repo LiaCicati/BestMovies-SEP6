@@ -102,6 +102,27 @@ class UserController {
       })
       .catch(next);
   };
+
+  updateUser(req, res, next) {
+    const { email, name } = req.body;
+
+    userRepository
+      .updateUserById(req.user._id, email, name)
+      .then((user) => {
+        if (!user) {
+          throw new NotFoundError("User not found");
+        }
+        res.send(user);
+      })
+      .catch((err) => {
+        if (err.code === 11000) {
+          next(new ConflictError('User with this email already exists'));
+        } else {
+          next(err);
+        }
+      });
+  }
+
 }
 const userController = new UserController(userRepository);
 module.exports = userController;

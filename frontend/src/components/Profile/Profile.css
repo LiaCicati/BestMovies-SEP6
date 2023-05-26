@@ -24,6 +24,7 @@
   padding: 0;
   transition: opacity 0.3s ease-out;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .profile__button:hover {
