@@ -134,6 +134,25 @@ function App() {
       });
   }
 
+  function handleUpdateUserInfo({ name, email }) {
+    userService
+      .updateProfile({ name, email })
+      .then((data) => {
+        if (data) {
+          setCurrentUser(data);
+          setIsInfoTooltipOpen(true);
+          setTooltipImage(success);
+          setMessage('Profile updated successfully!');
+        }
+      })
+      .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setTooltipImage(fail);
+        setMessage(utils.getErrors(err));
+        console.log(utils.getErrors(err));
+      });
+  }
+
   function handleAddMovie(movie) {
     userService
       .likeMovie(movie)
@@ -325,7 +344,7 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute isLoggedIn={loggedIn}>
-                <Profile />
+                <Profile onUpdate={handleUpdateUserInfo} />
               </ProtectedRoute>
             }
           />

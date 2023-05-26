@@ -18,6 +18,7 @@ const Login = ({ onLogin }) => {
       <h1 className="login__title">Login</h1>
       <Form name="login" onSubmit={handleSubmit} noValidate>
         <Input
+          auth
           label="E-mail"
           id="email"
           name="email"
@@ -29,6 +30,7 @@ const Login = ({ onLogin }) => {
         />
 
         <Input
+          auth
           label="Password"
           id="password"
           name="password"

@@ -18,6 +18,7 @@ const Register = ({ onRegister }) => {
       <h1 className="register__title">Register</h1>
       <Form name="register" onSubmit={handleSubmit} noValidate>
         <Input
+          auth
           label="Name"
           id="name"
           name="name"
@@ -30,6 +31,7 @@ const Register = ({ onRegister }) => {
           error={errors.name}
         />
         <Input
+          auth
           label="E-mail"
           id="email"
           name="email"
@@ -41,6 +43,7 @@ const Register = ({ onRegister }) => {
         />
 
         <Input
+          auth
           label="Password"
           id="password"
           name="password"
