@@ -51,10 +51,21 @@ const validateUserUpdate = celebrate({
   }),
 });
 
+const validateRating = celebrate({
+  body: Joi.object().keys({
+    title: Joi.string().required(),
+    my_rating: Joi.number().required().min(0).max(10),
+    backdrop_path: Joi.string().required().custom(validatorURL),
+    poster_path: Joi.string().required().custom(validatorURL),
+    movieId: Joi.number().required(),
+  }),
+});
+
 module.exports = {
   validateUserRegister,
   validateUserLogin,
   validateMovie,
   validateMovieId,
-  validateUserUpdate
+  validateUserUpdate,
+  validateRating
 };
