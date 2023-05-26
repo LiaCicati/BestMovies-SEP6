@@ -6,7 +6,7 @@ import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { useFormWithValidation } from "../../utils/formValidation";
 import Header from "../Header/Header";
 import React from "react";
-const Profile = ({ onSignOut }) => {
+const Profile = ({ onSignOut, onUpdate }) => {
   const [isVisibleSubmitButton, setVisibleSubmitButton] = useState(false);
   const [isDisabledInput, setDisabledInput] = useState(true);
 
@@ -16,6 +16,10 @@ const Profile = ({ onSignOut }) => {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    onUpdate({
+      name: values.name || currentUser.name,
+      email: values.email || currentUser.email,
+    });
     setVisibleSubmitButton(false);
     setDisabledInput(true);
   }
