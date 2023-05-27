@@ -3,7 +3,6 @@ import userService from "../../services/userService";
 import ratingService from "../../services/ratingService";
 import { useParams, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import Header from "../Header/Header";
 import "./MovieDetails.css";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
@@ -167,7 +166,6 @@ function MovieDetails() {
   }
   return (
     <div>
-      <Header />
       {isFavoriteMoviesPage && (
         <div className="details">
           <div className="details__poster-container">

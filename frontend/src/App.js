@@ -13,6 +13,7 @@ import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 import Statistics from "./components/Statistics/Statistics";
 import RatedMovies from "./components/RatedMovies/RatedMovies";
+import Header from "./components/Header/Header";
 import InfoTooltip from "./components/InfoToolTip/InfoToolTip";
 import success from "./images/success.png";
 import fail from "./images/fail.png";
@@ -305,6 +306,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="app">
+        <Header />
         <Routes>
           <Route
             path="/"
@@ -385,9 +387,9 @@ function App() {
           <Route
             path="/statistics"
             element={
-              <>
+              <ProtectedRoute isLoggedIn={loggedIn}>
                 <Statistics />
-              </>
+              </ProtectedRoute>
             }
           />
         </Routes>

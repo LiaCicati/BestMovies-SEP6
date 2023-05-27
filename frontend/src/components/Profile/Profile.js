@@ -4,7 +4,6 @@ import Input from "../Input/Input";
 import { useContext, useState, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { useFormWithValidation } from "../../utils/formValidation";
-import Header from "../Header/Header";
 import React from "react";
 const Profile = ({ onSignOut, onUpdate }) => {
   const [isVisibleSubmitButton, setVisibleSubmitButton] = useState(false);
@@ -35,7 +34,6 @@ const Profile = ({ onSignOut, onUpdate }) => {
 
   return (
     <>
-    <Header />
       <section className="profile">
         <h1 className="profile__title">{"Hello, " + currentUser.name}</h1>
         <Form name="profile" noValidate onSubmit={handleSubmit}>
