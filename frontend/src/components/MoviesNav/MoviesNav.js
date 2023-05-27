@@ -1,5 +1,5 @@
 import "./MoviesNav.css";
-import {  NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import React from "react";
 
@@ -32,30 +32,28 @@ const MoviesNav = () => {
 
             <ul className="nav__list">
               <li className="nav__list-item">
-                <NavLink
-                  to="/movies"
-                  className="nav__link"
-                  activeclassname="nav__link_active"
-                >
-                  Movies
+                <NavLink to="/" className="nav__link">
+                  Home
                 </NavLink>
               </li>
               <li className="nav__list-item">
-                <NavLink
-                  to="/favorites"
-                  className="nav__link"
-                  activeclassname="nav__link_active"
-                >
+                <NavLink to="/statistics" className="nav__link">
+                  Statistics
+                </NavLink>
+              </li>
+              <li className="nav__list-item">
+                <NavLink to="/favorites" className="nav__link">
                   My Favorites
+                </NavLink>
+              </li>
+              <li className="nav__list-item">
+                <NavLink to="/my-ratings" className="nav__link">
+                  My Ratings
                 </NavLink>
               </li>
             </ul>
           </div>
-          <NavLink
-            to="/profile"
-            className="nav__link nav__link_type_profile"
-            activeclassname="nav__link_active"
-          >
+          <NavLink to="/profile" className="nav__link nav__link_type_profile">
             Profile
           </NavLink>
         </div>
