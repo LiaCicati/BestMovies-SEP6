@@ -12,6 +12,7 @@ import Movies from "./components/Movies/Movies";
 import FavoriteMovies from "./components/FavoriteMovies/FavoriteMovies";
 import MovieDetails from "./components/MoviesDetails/MovieDetails";
 import Statistics from "./components/Statistics/Statistics";
+import RatedMovies from "./components/RatedMovies/RatedMovies";
 import InfoTooltip from "./components/InfoToolTip/InfoToolTip";
 import success from "./images/success.png";
 import fail from "./images/fail.png";
@@ -82,7 +83,10 @@ function App() {
           const data = await movieService.getMovies();
           const movies = data.results;
           localStorage.setItem("movies", JSON.stringify(movies));
-          const updatedMovies = utils.checkFavoriteMovies(movies, favoriteMovies);
+          const updatedMovies = utils.checkFavoriteMovies(
+            movies,
+            favoriteMovies
+          );
           setAllMovies(updatedMovies);
           setShowMore(updatedMovies.length > utils.getMoviesCount());
         }
@@ -142,7 +146,7 @@ function App() {
           setCurrentUser(data);
           setIsInfoTooltipOpen(true);
           setTooltipImage(success);
-          setMessage('Profile updated successfully!');
+          setMessage("Profile updated successfully!");
         }
       })
       .catch((err) => {
@@ -333,6 +337,24 @@ function App() {
               <>
                 <MovieDetails />
               </>
+            }
+          />
+
+          <Route
+            path="/my-ratings"
+            element={
+              <ProtectedRoute isLoggedIn={loggedIn}>
+                <RatedMovies />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/my-ratings/:id"
+            element={
+              <ProtectedRoute isLoggedIn={loggedIn}>
+                <MovieDetails />
+              </ProtectedRoute>
             }
           />
           <Route
