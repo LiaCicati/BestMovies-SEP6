@@ -10,6 +10,7 @@ const MoviesCard = ({ card, onCardClickButton }) => {
 
   const isFavoriteMoviesPage = location.pathname === "/favorites";
   const isMoviesPage = location.pathname === "/";
+  const isMyRatingsPage = location.pathname === "/my-ratings";
 
   const likedMovie = <img src={iconLiked} alt="Liked" />;
   const likeMovie = <img src={iconLike} alt="Like" />;
@@ -40,7 +41,7 @@ const MoviesCard = ({ card, onCardClickButton }) => {
             className="card__image"
           ></img>
         </a>
-        {loggedInUser && (
+        {loggedInUser && !isMyRatingsPage && (
           <button
             className="card__button"
             type="button"
@@ -53,16 +54,25 @@ const MoviesCard = ({ card, onCardClickButton }) => {
         )}
       </div>
       <div className="card__text">
-        {isFavoriteMoviesPage ? (
+        {isFavoriteMoviesPage && (
           <Link to={`/favorites/${card._id}`}>
             <h3 className="card__title">{card.title}</h3>
           </Link>
-        ) : (
+        )}
+        {isMoviesPage && (
           <Link to={`/movies/${card.id}`}>
             <h3 className="card__title">{card.title}</h3>
           </Link>
         )}
+        {isMyRatingsPage && (
+          <Link to={`/my-ratings/${card._id}`}>
+            <h3 className="card__title">{card.title}</h3>
+          </Link>
+        )}
         <span className="card__rating">{card.vote_average}</span>
+        {isMyRatingsPage && (
+          <span className="card__rating">{card.my_rating}</span>
+        )}
       </div>
     </li>
   );
