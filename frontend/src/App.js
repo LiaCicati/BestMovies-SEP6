@@ -201,6 +201,15 @@ function App() {
       });
   }
 
+  function onSignOut() {
+    localStorage.clear();
+
+    setIsLoggedIn(false);
+    setCurrentUser({});
+    setFavoriteMovies([]);
+    navigate("/");
+  }
+
   function updateMovieState(movie, isFavorite) {
     setAllMovies((prevMovies) =>
       prevMovies.map((prevMovie) =>
@@ -366,7 +375,10 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute isLoggedIn={loggedIn}>
-                <Profile onUpdate={handleUpdateUserInfo} />
+                <Profile
+                  onUpdate={handleUpdateUserInfo}
+                  onSignOut={onSignOut}
+                />
               </ProtectedRoute>
             }
           />
