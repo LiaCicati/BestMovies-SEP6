@@ -2,7 +2,8 @@ import movieService from "../../services/movieService";
 import userService from "../../services/userService";
 import ratingService from "../../services/ratingService";
 import { useParams, useLocation } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import "./MovieDetails.css";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
@@ -16,34 +17,17 @@ function MovieDetails() {
   const location = useLocation();
   const isFavoriteMoviesPage = location.pathname.includes("favorites");
   const isMyRatingsPage = location.pathname.includes("my-ratings");
-  const [userRating, setUserRating] = useState(0);
-  const [ratingId, setRatingId] = useState("");
   const [ratedMovie, setRatedMovie] = useState({});
 
-  const handleRatingChange = (value) => {
-    setUserRating(value);
+  const currentUser = useContext(CurrentUserContext);
 
+  const handleRatingChange = (value) => {
     // Update the rating if it already exists, otherwise add a new rating
-    if (userRating) {
-      ratingService
-        .updateRating({ id: ratingId, my_rating: value })
-        .then((updatedRating) => {
-          console.log("Rating updated:", updatedRating);
-          setRatingId(updatedRating._id);
-          localStorage.setItem(
-            `rating_${movie.id}`,
-            JSON.stringify(updatedRating)
-          );
-        })
-        .catch((error) => {
-          console.error("Error updating rating:", error);
-        });
-    } else if (ratedMovie.my_rating) {
+    if (ratedMovie.my_rating) {
       ratingService
         .updateRating({ id: ratedMovie._id, my_rating: value })
         .then((updatedRating) => {
           console.log("Rating updated:", updatedRating);
-          setRatingId(updatedRating._id);
           localStorage.setItem(
             `rating_${ratedMovie.movieId}`,
             JSON.stringify(updatedRating)
@@ -63,7 +47,6 @@ function MovieDetails() {
           my_rating: value,
         })
         .then((addedRating) => {
-          setRatingId(addedRating._id);
           localStorage.setItem(
             `rating_${movie.id}`,
             JSON.stringify(addedRating)
@@ -80,8 +63,6 @@ function MovieDetails() {
     const storedRating = localStorage.getItem(`rating_${movie.id}`);
     if (storedRating) {
       const parsedRating = JSON.parse(storedRating);
-      setUserRating(parsedRating.my_rating);
-      setRatingId(parsedRating._id);
       setRatedMovie(parsedRating);
     }
   }, [movie.id]);
@@ -193,7 +174,11 @@ function MovieDetails() {
           <div className="details__poster-container">
             <img
               className="details__poster"
-              src={API_IMG + movie.poster_path}
+              src={
+                !movie.poster_path
+                  ? "https://t3.ftcdn.net/jpg/03/34/83/22/360_F_334832255_IMxvzYRygjd20VlSaIAFZrQWjozQH6BQ.jpg"
+                  : API_IMG + movie.poster_path
+              }
               alt={movie.title}
             />
           </div>
@@ -225,25 +210,27 @@ function MovieDetails() {
 
             <h3>About:</h3>
             <p>{movie.overview}</p>
-            <div>
-              <h2>Rate the Movie</h2>
+            {currentUser.email && (
               <div>
-                {Array.from({ length: 10 }, (_, index) => (
-                  <span
-                    key={index}
-                    onClick={() => handleRatingChange(index + 1)}
-                    style={{
-                      cursor: "pointer",
-                      fontSize: "30px",
-                      color: index < userRating ? "gold" : "gray",
-                    }}
-                  >
-                    ★
-                  </span>
-                ))}
+                <h2>Rate the Movie</h2>
+                <div>
+                  {Array.from({ length: 10 }, (_, index) => (
+                    <span
+                      key={index}
+                      onClick={() => handleRatingChange(index + 1)}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "30px",
+                        color: index < ratedMovie.my_rating ? "gold" : "gray",
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <p>Your rating: {ratedMovie.my_rating}</p>
               </div>
-              <p>Your rating: {userRating}</p>
-            </div>
+            )}
           </div>
         </div>
       )}

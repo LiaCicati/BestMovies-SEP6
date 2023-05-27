@@ -195,7 +195,7 @@ const Statistics = () => {
                       textAnchor="end"
                       height={50}
                     />
-                    <YAxis domain={[0, 10]} />
+                    <YAxis domain={[0, 10]} stroke="#FFFFFF" />
                     <Tooltip />
                     <Legend layout="vertical" />
                     <Bar
@@ -225,8 +225,10 @@ const Statistics = () => {
                     angle={-45}
                     textAnchor="end"
                     height={100}
+                    stroke="#FFFFFF"
+                    tick={{ fill: "#FFFFFF" }}
                   />
-                  <YAxis />
+                  <YAxis stroke="#FFFFFF" tick={{ fill: "#FFFFFF" }} />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="count" fill="#82ca9d" name="Number of Movies" />

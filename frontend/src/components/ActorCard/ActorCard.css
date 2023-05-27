@@ -1,12 +1,15 @@
 .actor-card {
   list-style: none;
   padding: 0;
+  background-color: #fff;
+  border-radius: 6px;
 }
 
 .actor-card__text {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 8px 10px 10px;
 }
 
 .actor-card__title {
@@ -34,7 +37,7 @@
   width: 100%;
   object-fit: cover;
   object-position: center;
-  border-radius: 6px;
+  border-radius: 6px 6px 0 0;
 }
 .actor-card__button {
   position: absolute;

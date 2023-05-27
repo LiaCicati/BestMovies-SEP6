@@ -29,8 +29,6 @@ const ActorCard = ({ card, onCardClickButton }) => {
       </div>
       <div className="actor-card__text">
         <h3 className="actor-card__title">{card.name}</h3>
-
-        <span className="actor-card__rating">{card.popularity}</span>
       </div>
     </li>
   );

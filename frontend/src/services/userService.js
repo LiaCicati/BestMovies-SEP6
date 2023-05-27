@@ -39,6 +39,19 @@ class UserService {
 
   likeMovie(movie) {
     const token = localStorage.getItem("token");
+    let posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+    let backdropPath = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`;
+
+    // Check if movie has poster and backdrop paths
+    if (!movie.poster_path) {
+      posterPath =
+        "https://t3.ftcdn.net/jpg/03/34/83/22/360_F_334832255_IMxvzYRygjd20VlSaIAFZrQWjozQH6BQ.jpg";
+    }
+
+    if (!movie.backdrop_path) {
+      backdropPath =
+        "https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg";
+    }
     return fetch(`${BASE_URL}/movies`, {
       method: "POST",
       headers: {
@@ -53,8 +66,8 @@ class UserService {
         original_language: movie.original_language,
         popularity: movie.popularity,
         overview: movie.overview,
-        poster_path: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-        backdrop_path: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
+        poster_path: posterPath,
+        backdrop_path: backdropPath,
         vote_average: movie.vote_average,
       }),
     }).then(checkResponse);
