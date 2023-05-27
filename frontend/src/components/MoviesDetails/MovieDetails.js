@@ -137,6 +137,11 @@ function MovieDetails() {
 
     getMovieDetails();
   }, [movieId, id, isFavoriteMoviesPage, isMyRatingsPage]);
+  const [showStars, setShowStars] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowStars(true);
+  };
 
   if (
     Object.keys(movie).length === 0 &&
@@ -156,13 +161,27 @@ function MovieDetails() {
               alt={favoriteMovie.title}
             />
           </div>
-          <div>
+          <div className="details__data">
             <h2 className="details__header-title">{favoriteMovie.title}</h2>
-            <div className="details__container">
-              <p>{favoriteMovie.release_date}</p>
-              <p>{favoriteMovie.original_language}</p>
-              <p>{movie.popularity}</p>
-              <p>Rating: {favoriteMovie.vote_average}</p>
+            <ul className="details__info">
+              <li className="details__info-item">
+                {favoriteMovie.original_language}
+              </li>
+              <li className="details__info-item">
+                {favoriteMovie.release_date}
+              </li>
+            </ul>
+            <div className="rating">
+              <span className="rating__title">TMDB Rating</span>
+              <div className="rating__data">
+                <span className="rating__star">&#9733;</span>
+                <div className="rating__facts">
+                  <span className="rating__average">
+                    <b> {favoriteMovie.vote_average}</b>
+                    {"/10"}
+                  </span>
+                </div>
+              </div>
             </div>
             <h3>About:</h3>
             <p>{favoriteMovie.overview}</p>
@@ -182,13 +201,25 @@ function MovieDetails() {
               alt={movie.title}
             />
           </div>
-          <div>
+          <div className="details__data">
             <h2 className="details__header-title">{movie.title}</h2>
-            <div className="details__container">
-              <p>{movie.release_date}</p>
-              <p>{movie.original_language}</p>
-              <p>{movie.popularity}</p>
-              <p>Rating: {movie.vote_average}</p>
+            <ul className="details__info">
+              <li className="details__info-item">{movie.original_language}</li>
+              <li className="details__info-item">{movie.release_date}</li>
+            </ul>
+
+            <div className="rating">
+              <span className="rating__title">TMDB Rating</span>
+              <div className="rating__data">
+                <span className="rating__star">&#9733;</span>
+                <div className="rating__facts">
+                  <span className="rating__average">
+                    <b> {movie.vote_average}</b>
+                    {"/10"}
+                  </span>
+                  <span className="rating__count">{movie.vote_count}</span>
+                </div>
+              </div>
             </div>
 
             <p>
@@ -212,23 +243,39 @@ function MovieDetails() {
             <p>{movie.overview}</p>
             {currentUser.email && (
               <div>
-                <h2>Rate the Movie</h2>
                 <div>
-                  {Array.from({ length: 10 }, (_, index) => (
-                    <span
-                      key={index}
-                      onClick={() => handleRatingChange(index + 1)}
-                      style={{
-                        cursor: "pointer",
-                        fontSize: "30px",
-                        color: index < ratedMovie.my_rating ? "gold" : "gray",
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
+                  {showStars && (
+                    <>
+                      {Array.from({ length: 10 }, (_, index) => (
+                        <span
+                          key={index}
+                          onClick={() => handleRatingChange(index + 1)}
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "30px",
+                            color:
+                              index < ratedMovie.my_rating ? "gold" : "gray",
+                          }}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </>
+                  )}
                 </div>
-                <p>Your rating: {ratedMovie.my_rating}</p>
+                {!showStars && (
+                  <button
+                    className="details__rate-button"
+                    onClick={handleButtonClick}
+                  >
+                    Rate Now
+                  </button>
+                )}
+                {showStars && (
+                  <p>
+                    Your rating: <b>{ratedMovie.my_rating}</b>
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -243,7 +290,7 @@ function MovieDetails() {
               alt={ratedMovie.title}
             />
           </div>
-          <div>
+          <div className="details__data">
             <h2 className="details__header-title">{ratedMovie.title}</h2>
 
             <div>
@@ -263,7 +310,10 @@ function MovieDetails() {
                   </span>
                 ))}
               </div>
-              <p>My rating: {ratedMovie.my_rating}</p>
+
+              <p>
+                My rating: <b>{ratedMovie.my_rating}</b>/10
+              </p>
             </div>
           </div>
         </div>
