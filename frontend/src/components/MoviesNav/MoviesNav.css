@@ -89,7 +89,7 @@
   font-size: 13px;
   line-height: 18px;
   text-decoration: none;
-  color: #000;
+  color: #fff;
   transition: opacity 0.3s ease-out;
 }
 .active {
@@ -165,6 +165,7 @@
     line-height: 22px;
     text-decoration: none;
     padding: 0 0 4px;
+    color: #000;
   }
 
   .active {

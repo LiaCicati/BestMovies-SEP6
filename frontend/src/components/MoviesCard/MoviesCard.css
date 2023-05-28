@@ -1,6 +1,8 @@
 .card {
   list-style: none;
   padding: 0;
+  background-color: #fff;
+  border-radius: 6px;
 }
 
 .card__text {
@@ -13,17 +15,22 @@
   font-weight: 500;
   font-size: 13px;
   line-height: 16px;
-  color: #000;
   max-width: 220px;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
+.card__data {
+  padding: 8px 10px 10px;
+}
+
 .card__rating {
+  display: flex;
+  align-items: center;
   font-weight: 400;
-  font-size: 11px;
-  line-height: 10px;
-  color: #a0a0a0;
+  font-size: 16px;
+  color: #000;
+  margin: 0;
 }
 .card__image-container {
   position: relative;
@@ -34,7 +41,7 @@
   width: 100%;
   object-fit: cover;
   object-position: center;
-  border-radius: 6px;
+  border-radius: 6px 6px 0 0;
 }
 .card__button {
   position: absolute;
@@ -51,8 +58,31 @@
   transition: opacity 0.2s ease-in-out;
 }
 
+.card__button-details {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 4px 24px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 24px;
+  background: #855cf8;
+  border-radius: 32px;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.card__button-details:hover {
+  opacity: 0.8;
+}
+
 .card__button:hover {
   opacity: 0.8;
+}
+
+.card__rating-star {
+  font-size: 24px;
+  color: #F0CE20;
+  margin: 0 4px;
 }
 
 @media screen and (max-width: 800px) {

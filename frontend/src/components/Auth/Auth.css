@@ -35,7 +35,7 @@
     font-size: 14px;
     line-height: 17px;
     text-align: center;
-    color: #a0a0a0;
+    color: #fff;
     margin: 0;
   }
  
@@ -44,7 +44,7 @@
     font-size: 14px;
     line-height: 17px;
     text-align: center;
-    color: #855CF8;
+    color: #baa2fb;
     text-decoration: none;
     margin-left: 6px;
     transition: opacity 0.3s ease-in-out;

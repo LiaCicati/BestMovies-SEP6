@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import React from "react";
-function FavoriteMovies({ favoriteMovies, onClickMoreButton, onCardClickButton }) {
+function FavoriteMovies({
+  favoriteMovies,
+  onClickMoreButton,
+  onCardClickButton,
+}) {
   const [searchValue, setSearchValue] = useState("");
   const [movies, setMovies] = useState(favoriteMovies);
 
@@ -27,6 +31,11 @@ function FavoriteMovies({ favoriteMovies, onClickMoreButton, onCardClickButton }
         onClickMoreButton={onClickMoreButton}
         onCardClickButton={onCardClickButton}
         buttonMore={false}
+        movieSearchError={
+          favoriteMovies < 1
+            ? "No favorite movies"
+            : "Sorry, we couldn't find any movies that match your search criteria."
+        }
       />
     </div>
   );

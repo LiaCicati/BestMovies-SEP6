@@ -5,9 +5,7 @@
   padding: 18px 70px;
 }
 
-.header_type_auth {
-  background: #855cf8;
-}
+
 
 .header__link {
   display: flex;
@@ -15,7 +13,7 @@
 }
 
 .header__logo {
-  color: #000;
+  color: #fff;
   transition: opacity 0.3s ease-in-out;
 }
 .header__logo:hover {
