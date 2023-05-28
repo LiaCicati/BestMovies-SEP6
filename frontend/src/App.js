@@ -16,6 +16,7 @@ import RatedMovies from "./components/RatedMovies/RatedMovies";
 import Header from "./components/Header/Header";
 import InfoTooltip from "./components/InfoToolTip/InfoToolTip";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
+import Footer from "./components/Footer/Footer";
 import success from "./images/success.png";
 import fail from "./images/fail.png";
 import * as utils from "./utils/utils";
@@ -401,6 +402,7 @@ function App() {
           image={tooltipImage}
           message={message}
         />
+        <Footer />
       </div>
     </CurrentUserContext.Provider>
   );
