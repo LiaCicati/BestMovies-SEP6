@@ -190,16 +190,7 @@ function App() {
     userService
       .likeMovie(movie)
       .then((favoriteMovie) => {
-        setFavoriteMovies((prevFavoriteMovies) => [
-          favoriteMovie,
-          ...prevFavoriteMovies,
-        ]);
-        updateMovieState(movie, true);
-        setFilteredMovies((prevFilteredMovies) => {
-          const updatedMovies = [...prevFilteredMovies, favoriteMovie];
-          setShowMore(updatedMovies.length > utils.getMoviesCount());
-          return updatedMovies;
-        });
+        setFavoriteMovies([favoriteMovie, ...favoriteMovies]);
       })
       .catch((err) => {
         console.log(err);
@@ -218,16 +209,18 @@ function App() {
           (favoriteMovie) => favoriteMovie.movieId !== movieId
         );
         setFavoriteMovies(newFavoriteMovies);
-        updateMovieState(movie, false);
-        setFilteredMovies((prevFilteredMovies) =>
-          prevFilteredMovies.filter(
-            (filteredMovie) => filteredMovie.id !== movie.id
-          )
-        );
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  function handleCardClickButton(movie) {
+    if (!movie.isFavorite && !movie._id) {
+      handleAddMovie(movie);
+    } else {
+      handleDeleteMovie(movie);
+    }
   }
 
   function onSignOut() {
@@ -237,22 +230,6 @@ function App() {
     setCurrentUser({});
     setFavoriteMovies([]);
     navigate("/");
-  }
-
-  function updateMovieState(movie, isFavorite) {
-    setAllMovies((prevMovies) =>
-      prevMovies.map((prevMovie) =>
-        prevMovie.id === movie.id ? { ...prevMovie, isFavorite } : prevMovie
-      )
-    );
-  }
-
-  function handleCardClickButton(movie) {
-    if (!movie.isFavorite && !movie._id) {
-      handleAddMovie(movie);
-    } else {
-      handleDeleteMovie(movie);
-    }
   }
 
   useEffect(() => {
