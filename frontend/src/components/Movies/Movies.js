@@ -7,7 +7,7 @@ function Movies({
   displayedMovies,
   onSearchSubmit,
   onClickMoreButton,
-  onCardClickButton,
+  onCardClickButton
 }) {
   return (
     <div className="movies">

@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import movieService from "../../services/movieService";
 import ActorCardList from "../ActorCardList/ActorCardList";
+import Preloader from "../Preloader/Preloader";
 const Statistics = () => {
   const [actors, setActors] = useState([]);
   const [selectedActorId, setSelectedActorId] = useState("");
@@ -20,21 +21,28 @@ const Statistics = () => {
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [genres, setGenres] = useState([]);
   const [showStatistics, setShowStatistics] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load actors data from local storage or fetch from API
   useEffect(() => {
-    const fetchActors = async () => {
-      try {
-        const response = await movieService.getPopularActors();
-        const actorData = response.results.filter(
-          (actor) => actor.known_for_department === "Acting"
-        );
+    const fetchActors = () => {
+      setIsLoading(true);
+      movieService
+        .getPopularActors()
+        .then((response) => {
+          const actorData = response.results.filter(
+            (actor) => actor.known_for_department === "Acting"
+          );
 
-        setActors(actorData);
-        localStorage.setItem("actors", JSON.stringify(actorData));
-      } catch (error) {
-        console.error("Error fetching actors:", error);
-      }
+          setActors(actorData);
+          localStorage.setItem("actors", JSON.stringify(actorData));
+        })
+        .catch((error) => {
+          console.error("Error fetching actors:", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     };
 
     const cachedActors = localStorage.getItem("actors");
@@ -162,6 +170,7 @@ const Statistics = () => {
   return (
     <div className="statistics">
       <h2 className="statistics__title">Actor Statistics</h2>
+      {isLoading && <Preloader />}
       {!showStatistics && (
         <ActorCardList
           cards={actors}

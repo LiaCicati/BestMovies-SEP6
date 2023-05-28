@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import ratingService from "../../services/ratingService";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import SearchForm from "../SearchForm/SearchForm";
+import Preloader from "../Preloader/Preloader";
 function RatedMovies() {
   const [ratings, setRatings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [movies, setMovies] = useState(ratings);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearchSubmit = (value) => {
     setSearchValue(value);
@@ -23,6 +25,7 @@ function RatedMovies() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    setIsLoading(true);
     ratingService
       .getRatings(token)
       .then((fetchedRatings) => {
@@ -30,12 +33,16 @@ function RatedMovies() {
       })
       .catch((error) => {
         console.error("Error fetching ratings:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
   return (
     <div className="rated-movies">
       <SearchForm onSearchSubmit={handleSearchSubmit} />
+      {isLoading && <Preloader />}
       <MoviesCardList
         cards={movies}
         movieSearchError={
