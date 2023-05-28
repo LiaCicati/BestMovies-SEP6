@@ -60,48 +60,74 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    const getUserDataAndFavoriteMovies = async () => {
-      try {
-        const [userData, favoriteMovies] = await Promise.all([
-          userService.getUser(token),
-          userService.getFavoriteMovies(token),
-        ]);
-
-        setCurrentUser(userData);
-        setFavoriteMovies(favoriteMovies);
-        localStorage.setItem("favorite-movies", JSON.stringify(favoriteMovies));
-        localStorage.setItem("current-user", JSON.stringify(userData));
-
-        const storedMovies = localStorage.getItem("movies");
-
-        if (storedMovies) {
-          const parsedMovies = JSON.parse(storedMovies);
-          const updatedMovies = utils.checkFavoriteMovies(
-            parsedMovies,
-            favoriteMovies
-          );
-          setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > utils.getMoviesCount());
-        } else {
-          const data = await movieService.getMovies();
-          const movies = data.results;
-          localStorage.setItem("movies", JSON.stringify(movies));
-          const updatedMovies = utils.checkFavoriteMovies(
-            movies,
-            favoriteMovies
-          );
-          setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > utils.getMoviesCount());
-        }
-      } catch (error) {
-        console.error("Error fetching user data and favorite movies:", error);
+    const getMovies = () => {
+      const storedMovies = localStorage.getItem("movies");
+      if (storedMovies) {
+        const parsedMovies = JSON.parse(storedMovies);
+        const updatedMovies = utils.checkFavoriteMovies(
+          parsedMovies,
+          favoriteMovies
+        );
+        setAllMovies(updatedMovies);
+        setShowMore(updatedMovies.length > utils.getMoviesCount());
+      } else {
+        movieService
+          .getMovies()
+          .then((data) => {
+            const movies = data.results;
+            localStorage.setItem("movies", JSON.stringify(movies));
+            const updatedMovies = utils.checkFavoriteMovies(
+              movies,
+              favoriteMovies
+            );
+            setAllMovies(updatedMovies);
+            setShowMore(updatedMovies.length > utils.getMoviesCount());
+          })
+          .catch((error) => {
+            console.error("Error fetching movies:", error);
+          });
       }
+    };
+
+    const getUserDataAndFavoriteMovies = () => {
+      Promise.all([
+        userService.getUser(token),
+        userService.getFavoriteMovies(token),
+      ])
+        .then(([userData, favoriteMovies]) => {
+          setCurrentUser(userData);
+          setFavoriteMovies(favoriteMovies);
+          localStorage.setItem(
+            "favorite-movies",
+            JSON.stringify(favoriteMovies)
+          );
+          localStorage.setItem("current-user", JSON.stringify(userData));
+        })
+        .catch((error) => {
+          console.error("Error fetching user data and favorite movies:", error);
+        });
     };
 
     if (loggedIn) {
       getUserDataAndFavoriteMovies();
     }
+
+    getMovies();
+    // eslint-disable-next-line
   }, [loggedIn]);
+
+  useEffect(() => {
+    const storedMovies = localStorage.getItem("movies");
+    if (storedMovies) {
+      const parsedMovies = JSON.parse(storedMovies);
+      const updatedMovies = utils.checkFavoriteMovies(
+        parsedMovies,
+        favoriteMovies
+      );
+      setAllMovies(updatedMovies);
+      setShowMore(updatedMovies.length > utils.getMoviesCount());
+    }
+  }, [favoriteMovies]);
 
   function onLogin(email, password) {
     userService
