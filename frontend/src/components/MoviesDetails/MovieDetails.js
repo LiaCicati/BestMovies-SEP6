@@ -258,7 +258,7 @@ function MovieDetails() {
                               index < ratedMovie.my_rating ? "gold" : "gray",
                           }}
                         >
-                          ★
+                         &#9733;
                         </span>
                       ))}
                     </>
@@ -307,7 +307,7 @@ function MovieDetails() {
                       color: index < ratedMovie.my_rating ? "gold" : "gray",
                     }}
                   >
-                    ★
+                   &#9733;
                   </span>
                 ))}
               </div>
