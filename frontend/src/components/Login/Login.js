@@ -19,7 +19,7 @@ const Login = ({ onLogin }) => {
       <Form name="login" onSubmit={handleSubmit} noValidate>
         <Input
           auth
-          label="E-mail"
+          label="Email"
           id="email"
           name="email"
           type="email"
