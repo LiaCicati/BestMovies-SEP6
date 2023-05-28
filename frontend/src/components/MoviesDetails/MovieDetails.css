@@ -28,6 +28,13 @@
   padding: 24px;
 }
 
+.details__preloader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+}
+
 @media screen and (max-width: 940px) {
   .details {
     flex-direction: column;

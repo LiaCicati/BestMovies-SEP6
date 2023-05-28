@@ -4,7 +4,7 @@ import ratingService from "../../services/ratingService";
 import { useParams, useLocation } from "react-router-dom";
 import React, { useEffect, useState, useContext } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import PageNotFound from "../PageNotFound/PageNotFound";
+import Preloader from "../Preloader/Preloader";
 import "./MovieDetails.css";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
@@ -149,7 +149,11 @@ function MovieDetails() {
     Object.keys(favoriteMovie).length === 0 &&
     Object.keys(ratedMovie).length === 0
   ) {
-    return <PageNotFound />;
+    return (
+      <div className="details__preloader">
+        <Preloader />
+      </div>
+    );
   }
   return (
     <div>
@@ -258,7 +262,7 @@ function MovieDetails() {
                               index < ratedMovie.my_rating ? "gold" : "gray",
                           }}
                         >
-                         &#9733;
+                          &#9733;
                         </span>
                       ))}
                     </>
@@ -307,7 +311,7 @@ function MovieDetails() {
                       color: index < ratedMovie.my_rating ? "gold" : "gray",
                     }}
                   >
-                   &#9733;
+                    &#9733;
                   </span>
                 ))}
               </div>
