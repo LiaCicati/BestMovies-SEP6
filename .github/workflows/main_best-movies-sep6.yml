@@ -23,6 +23,7 @@ jobs:
 
       - name: npm install, build, and test
         run: |
+          cd backend
           npm install
           npm run build --if-present
           npm run test --if-present
@@ -31,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: /backend
+          path: backend
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,4 +54,4 @@ jobs:
           app-name: 'Best-Movies-SEP6'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EE31708FF6794D1D9F9611D4A4C7AC8A }}
-          package: /backend
+          package: ${{ github.workspace }}/backend
