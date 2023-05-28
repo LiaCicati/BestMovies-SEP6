@@ -4,6 +4,7 @@ import ratingService from "../../services/ratingService";
 import { useParams, useLocation } from "react-router-dom";
 import React, { useEffect, useState, useContext } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import PageNotFound from "../PageNotFound/PageNotFound";
 import "./MovieDetails.css";
 const API_IMG = "https://image.tmdb.org/t/p/w500/";
 
@@ -148,7 +149,7 @@ function MovieDetails() {
     Object.keys(favoriteMovie).length === 0 &&
     Object.keys(ratedMovie).length === 0
   ) {
-    return <div>Movie details not found.</div>;
+    return <PageNotFound />;
   }
   return (
     <div>

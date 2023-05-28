@@ -15,6 +15,7 @@ import Statistics from "./components/Statistics/Statistics";
 import RatedMovies from "./components/RatedMovies/RatedMovies";
 import Header from "./components/Header/Header";
 import InfoTooltip from "./components/InfoToolTip/InfoToolTip";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 import success from "./images/success.png";
 import fail from "./images/fail.png";
 import * as utils from "./utils/utils";
@@ -392,6 +393,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
         <InfoTooltip
           isOpen={isInfoTooltipOpen}
