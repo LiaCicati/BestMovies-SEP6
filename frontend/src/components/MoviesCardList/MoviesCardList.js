@@ -7,13 +7,14 @@ const MoviesCardList = ({
   buttonMore,
   onClickMoreButton,
   onCardClickButton,
+  movieSearchError
 }) => {
   const areVisibleCards = cards.length > 0;
   return (
     <section className="cards">
       {!areVisibleCards && (
         <p className="cards__message">
-          Sorry, we couldn't find any movies that match your search criteria.
+          {movieSearchError}
         </p>
       )}
       {areVisibleCards && (
