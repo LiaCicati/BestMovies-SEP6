@@ -1,11 +1,14 @@
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = "http://localhost:3001"; // The base URL for the API
 
+// Checks the response status and handle errors
 const checkResponse = (res) =>
   res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
 
 class UserService {
+  // Registers a new user
   registerUser(name, email, password) {
     return fetch(`${BASE_URL}/signup`, {
+      // API endpoint for user registration
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -14,9 +17,10 @@ class UserService {
       body: JSON.stringify({ name, email, password }),
     }).then(checkResponse);
   }
-
+  // Logs in a user
   loginUser = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
+      // API endpoint for user login
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -25,18 +29,19 @@ class UserService {
       body: JSON.stringify({ email, password }),
     }).then(checkResponse);
   };
-
+  // Retrieves user details
   getUser = (token) => {
     return fetch(`${BASE_URL}/users/me`, {
+      // API endpoint to get user details
       method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
       },
     }).then(checkResponse);
   };
-
+  // Likes a movie
   likeMovie(movie) {
     const token = localStorage.getItem("token");
     let posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
@@ -45,19 +50,20 @@ class UserService {
     // Check if movie has poster and backdrop paths
     if (!movie.poster_path) {
       posterPath =
-        "https://t3.ftcdn.net/jpg/03/34/83/22/360_F_334832255_IMxvzYRygjd20VlSaIAFZrQWjozQH6BQ.jpg";
+        "https://t3.ftcdn.net/jpg/03/34/83/22/360_F_334832255_IMxvzYRygjd20VlSaIAFZrQWjozQH6BQ.jpg"; // Default poster path
     }
 
     if (!movie.backdrop_path) {
       backdropPath =
-        "https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg";
+        "https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg"; // Default backdrop path
     }
     return fetch(`${BASE_URL}/movies`, {
+      // API endpoint to like a movie
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
       },
       body: JSON.stringify({
         movieId: movie.id,
@@ -72,9 +78,10 @@ class UserService {
       }),
     }).then(checkResponse);
   }
-
+  // Retrieves favorite movies
   getFavoriteMovies(token) {
     return fetch(`${BASE_URL}/movies`, {
+      // API endpoint to get favorite movies
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -83,10 +90,11 @@ class UserService {
       },
     }).then(checkResponse);
   }
-
+  // Deletes a movie
   deleteMovie(movieId) {
     const token = localStorage.getItem("token");
     return fetch(`${BASE_URL}/movies/${movieId}`, {
+      // API endpoint to delete a movie
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -95,10 +103,11 @@ class UserService {
       },
     }).then(checkResponse);
   }
-
+  // Retrieves details of a favorite movie
   getFavoriteMovieDetails(movieId) {
     const token = localStorage.getItem("token");
     return fetch(`${BASE_URL}/movies/${movieId}`, {
+      // API endpoint to get details of a favorite movie
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -107,10 +116,11 @@ class UserService {
       },
     }).then(checkResponse);
   }
-
+  // Updates user profile
   updateProfile({ name, email }) {
     const token = localStorage.getItem("token");
     return fetch(`${BASE_URL}/users/me`, {
+      // API endpoint to update user profile
       method: "PATCH",
       headers: {
         Accept: "application/json",

@@ -1,3 +1,6 @@
+/*
+ Custom hook for managing form state and validation
+*/
 import { useState } from "react";
 
 export const useFormWithValidation = () => {
