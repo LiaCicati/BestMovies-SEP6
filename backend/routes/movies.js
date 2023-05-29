@@ -1,3 +1,6 @@
+/*
+This module defines the router for favorite movie-related operations
+*/
 const router = require("express").Router();
 const MovieController = require("../controllers/movie");
 const { validateMovieId, validateMovie } = require("../middlewares/celebrateValidation");

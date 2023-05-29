@@ -1,3 +1,6 @@
+/*
+Custom error class for representing a Bad Request error (HTTP 400)
+*/
 class BadRequestError extends Error {
   constructor(message) {
     super(message);

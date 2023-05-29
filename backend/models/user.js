@@ -1,3 +1,7 @@
+/*
+ This module defines the user schema using Mongoose
+ It exports a Mongoose model for the 'user' collection in the database
+*/
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({

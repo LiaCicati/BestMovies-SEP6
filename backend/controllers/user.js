@@ -14,6 +14,9 @@ class UserController {
     this.userRepository = userRepository;
   }
 
+  /*
+Creates a new user
+*/
   createUser = (req, res, next) => {
     // Extract the name, email, and password from the request body
     const { name, email, password } = req.body;
@@ -53,6 +56,9 @@ class UserController {
       .catch(next);
   };
 
+  /*
+Retrieves user information
+*/
   getUser = (req, res, next) => {
     // Retrieve the user's ID from the request object
     const userId = req.user._id;
@@ -72,6 +78,9 @@ class UserController {
       .catch(next); // Pass any errors to the error handling middleware
   };
 
+  /*
+Authenticates user and generates JWT token for login
+*/
   login = (req, res, next) => {
     const { email, password } = req.body;
 
@@ -103,26 +112,35 @@ class UserController {
       .catch(next);
   };
 
+  /*
+Updates user information
+*/
   updateUser(req, res, next) {
+    // Extract email and name from request body
     const { email, name } = req.body;
 
+    // Update the user with the given ID
     userRepository
       .updateUserById(req.user._id, email, name)
       .then((user) => {
+        // Check if the user exists
         if (!user) {
+          // Throw an error if the user was not found
           throw new NotFoundError("User not found");
         }
+        // Send the updated user as a response
         res.send(user);
       })
       .catch((err) => {
+        // Handle duplicate email conflict
         if (err.code === 11000) {
-          next(new ConflictError('User with this email already exists'));
+          next(new ConflictError("User with this email already exists"));
         } else {
+          // Pass other errors to the error handler middleware
           next(err);
         }
       });
   }
-
 }
 const userController = new UserController(userRepository);
 module.exports = userController;

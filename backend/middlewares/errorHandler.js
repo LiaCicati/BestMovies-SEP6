@@ -1,3 +1,7 @@
+/*
+This middleware handles error responses sent by the application
+It sets the appropriate status code and sends an error message in the response
+*/
 const errorHandler = (err, req, res, next) => {
   // Extract the status code and error message from the error object
   const { statusCode = 500, message } = err;

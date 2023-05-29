@@ -1,21 +1,28 @@
+/*
+ This module represents the MovieRepository class responsible for interacting with the movie collection in the database.
+*/
+
 const Movie = require("../models/movie");
 
 class MovieRepository {
-  async createMovie(movie) {
-    return Movie.create(movie);
+  constructor() {
+    this.Movie = Movie;
   }
 
-  async findMovies(owner) {
-    return Movie.find(owner);
-  }
+  createMovie = async (movie) => {
+    return this.Movie.create(movie);
+  };
 
-  async findMovieById(id) {
-    return Movie.findById(id);
-  }
+  findMovies = async (owner) => {
+    return this.Movie.find(owner);
+  };
 
-  async deleteMovie(id) {
-    return Movie.findByIdAndRemove(id);
-  }
+  findMovieById = async (id) => {
+    return this.Movie.findById(id);
+  };
+
+  deleteMovie = async (id) => {
+    return this.Movie.findByIdAndRemove(id);
+  };
 }
-
 module.exports = MovieRepository;
