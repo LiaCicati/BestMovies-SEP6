@@ -1,5 +1,5 @@
 // The URL for the API
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = "http://localhost:8080";
 
 const checkResponse = (res) =>
   res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);

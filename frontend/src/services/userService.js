@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3001"; // The base URL for the API
+const BASE_URL = "http://localhost:8080"; // The base URL for the API
 
 // Checks the response status and handle errors
 const checkResponse = (res) =>
