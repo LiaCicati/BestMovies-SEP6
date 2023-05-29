@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080"; // The base URL for the API
+const BASE_URL = "https://best-movies-sep6.azurewebsites.net"; // The base URL for the API
 
 // Checks the response status and handle errors
 const checkResponse = (res) =>

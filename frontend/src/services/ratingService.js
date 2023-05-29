@@ -1,5 +1,5 @@
 // The URL for the API
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://best-movies-sep6.azurewebsites.net";
 
 const checkResponse = (res) =>
   res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
