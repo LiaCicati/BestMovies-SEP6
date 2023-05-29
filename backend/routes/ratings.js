@@ -1,3 +1,6 @@
+/*
+This module defines the router for rating-related operations
+*/
 const router = require("express").Router();
 const RatingController = require("../controllers/rating");
 const { validateRating } = require("../middlewares/celebrateValidation");

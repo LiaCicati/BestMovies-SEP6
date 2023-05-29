@@ -1,7 +1,12 @@
+/*
+This module exports validation middleware using the 'celebrate' library
+*/
+
 const { celebrate, Joi } = require("celebrate");
 const validator = require("validator");
 const BadRequestError = require("../errors/BadRequestError");
 
+// Custom validator function for URL validation
 const validatorURL = (url) => {
   if (!validator.isURL(url)) {
     throw new BadRequestError("The provided url is not a valid url");
@@ -9,6 +14,7 @@ const validatorURL = (url) => {
   return url;
 };
 
+// Validation schema for user registration
 const validateUserRegister = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -17,6 +23,7 @@ const validateUserRegister = celebrate({
   }),
 });
 
+// Validation schema for user login
 const validateUserLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -24,6 +31,7 @@ const validateUserLogin = celebrate({
   }),
 });
 
+// Validation schema for movie creation
 const validateMovie = celebrate({
   body: Joi.object().keys({
     title: Joi.string().required(),
@@ -38,12 +46,14 @@ const validateMovie = celebrate({
   }),
 });
 
+// Validation schema for movie ID parameter
 const validateMovieId = celebrate({
   params: Joi.object().keys({
     movieId: Joi.string().alphanum().hex().length(24),
   }),
 });
 
+// Validation schema for user update
 const validateUserUpdate = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -51,6 +61,7 @@ const validateUserUpdate = celebrate({
   }),
 });
 
+// Validation schema for rating creation
 const validateRating = celebrate({
   body: Joi.object().keys({
     title: Joi.string().required(),
@@ -67,5 +78,5 @@ module.exports = {
   validateMovie,
   validateMovieId,
   validateUserUpdate,
-  validateRating
+  validateRating,
 };

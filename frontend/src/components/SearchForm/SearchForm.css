@@ -52,6 +52,27 @@
   opacity: 0.8;
 }
 
+.search__clear {
+  display: flex;
+  align-items: center;
+  background: #ed5e5e;
+  border-radius: 48px;
+  outline: none;
+  border: none;
+  padding: 0 14px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 18px;
+  transition: opacity 0.3s ease-in-out;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.search__clear:hover {
+  opacity: 0.8;
+}
+
 .search__container {
   display: flex;
   width: 100%;

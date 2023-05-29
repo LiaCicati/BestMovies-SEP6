@@ -1,6 +1,4 @@
-export const MOVIES_URL = "https://api.themoviedb.org/3/movie";
-export const API_KEY = "api_key=8e52cfb664bd10618b03ab564d9677eb";
-
+const apiKey = process.env.REACT_APP_API_KEY;
 const getResponseData = (res) => {
   if (res.ok) {
     return res.json();
@@ -9,49 +7,64 @@ const getResponseData = (res) => {
 };
 
 class MovieService {
+  // Retrieves popular movies
   getMovies = () => {
-    return fetch(MOVIES_URL + "/popular?" + API_KEY, {
-      method: "GET",
-    }).then(getResponseData);
+    return fetch(
+      "https://api.themoviedb.org/3/movie/popular?api_key=" + apiKey,
+      {
+        method: "GET",
+      }
+    ).then(getResponseData);
   };
 
+  // Retrieves details for a specific movie
   getMovieDetails = (id) => {
     return fetch(
-      `https://api.themoviedb.org/3/movie/${id}?${API_KEY}&append_to_response=credits`,
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=credits`,
       {
         method: "GET",
       }
     ).then(getResponseData);
   };
 
+  // Retrieves movies based on a given title
   getMovieByTitle = (title) => {
     return fetch(
-      `https://api.themoviedb.org/3/search/movie?${API_KEY}&query=${title}`,
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${title}`,
       {
         method: "GET",
       }
     ).then(getResponseData);
   };
 
+  // Retrieves movie genres
   getMoviesGenres = () => {
-    return fetch("https://api.themoviedb.org/3/genre/movie/list?" + API_KEY, {
-      method: "GET",
-    }).then(getResponseData);
+    return fetch(
+      "https://api.themoviedb.org/3/genre/movie/list?api_key=" + apiKey,
+      {
+        method: "GET",
+      }
+    ).then(getResponseData);
   };
 
+  // Retrieves movies associated with a specific person
   getMoviesByActor = (actorId) => {
     return fetch(
-      `https://api.themoviedb.org/3/person/${actorId}/movie_credits?${API_KEY}`,
+      `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${apiKey}`,
       {
         method: "GET",
       }
     ).then(getResponseData);
   };
 
+  // Retrieves popular actors
   getPopularActors = () => {
-    return fetch("https://api.themoviedb.org/3/person/popular?" + API_KEY, {
-      method: "GET",
-    }).then(getResponseData);
+    return fetch(
+      "https://api.themoviedb.org/3/person/popular?api_key=" + apiKey,
+      {
+        method: "GET",
+      }
+    ).then(getResponseData);
   };
 }
 

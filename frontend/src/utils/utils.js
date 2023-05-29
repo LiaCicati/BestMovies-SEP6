@@ -1,3 +1,8 @@
+/*
+ Utility functions
+*/
+
+// Determines the number of movies to display based on the current window width
 export const getMoviesCount = () => {
   switch (true) {
     case window.innerWidth >= 944:
@@ -9,6 +14,7 @@ export const getMoviesCount = () => {
   }
 };
 
+// Determines the number of movies to load initially based on the current window width
 export const loadMovies = () => {
   if (window.innerWidth >= 944) {
     return 3;
@@ -16,11 +22,10 @@ export const loadMovies = () => {
   return 2;
 };
 
+// Checks and updates the favorite status of movies
 export const checkFavoriteMovies = (allMovies, favoriteMovies) => {
   favoriteMovies.forEach((favoriteMovie) => {
-    const movie = allMovies.find(
-      (item) => item.title === favoriteMovie.title
-    );
+    const movie = allMovies.find((item) => item.title === favoriteMovie.title);
     if (movie) {
       movie.isFavorite = true;
     }
@@ -28,6 +33,7 @@ export const checkFavoriteMovies = (allMovies, favoriteMovies) => {
   return allMovies;
 };
 
+// Returns the error message based on the provided error
 export const getErrors = (err) => {
   if (err === "Error: 400" || err.message === "Error: 400")
     return "The data provided is invalid. Please check the information you provided and try again.";

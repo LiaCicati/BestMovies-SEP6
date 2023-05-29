@@ -1,9 +1,11 @@
+// The URL for the API
 const BASE_URL = "http://localhost:3001";
 
 const checkResponse = (res) =>
   res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
 
 class RatingService {
+  // Adds a rating for a movie
   addRating(rating) {
     let posterPath = `https://image.tmdb.org/t/p/w500${rating.poster_path}`;
     let backdropPath = `https://image.tmdb.org/t/p/w500${rating.backdrop_path}`;
@@ -36,6 +38,7 @@ class RatingService {
     }).then(checkResponse);
   }
 
+  // Retrieves all ratings
   getRatings(token) {
     return fetch(`${BASE_URL}/ratings`, {
       method: "GET",
@@ -47,6 +50,7 @@ class RatingService {
     }).then(checkResponse);
   }
 
+  // Retrieves a rating by its ID
   getRatingById(id) {
     const token = localStorage.getItem("token");
     return fetch(`${BASE_URL}/ratings/${id}`, {
@@ -59,6 +63,7 @@ class RatingService {
     }).then(checkResponse);
   }
 
+  // Updates a rating
   updateRating({ id, my_rating }) {
     const token = localStorage.getItem("token");
     return fetch(`${BASE_URL}/ratings/${id}`, {

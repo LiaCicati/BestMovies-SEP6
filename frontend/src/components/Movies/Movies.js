@@ -7,7 +7,7 @@ function Movies({
   displayedMovies,
   onSearchSubmit,
   onClickMoreButton,
-  onCardClickButton
+  onCardClickButton,
 }) {
   return (
     <div className="movies">
@@ -17,6 +17,7 @@ function Movies({
         onClickMoreButton={onClickMoreButton}
         onCardClickButton={onCardClickButton}
         buttonMore={showMore}
+        movieSearchError={displayedMovies < 1 && "No movies found"}
       />
     </div>
   );

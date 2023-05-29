@@ -1,5 +1,7 @@
 import "./MoviesCard.css";
 import { Link, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import iconLiked from "../../images/liked.svg";
 import iconLike from "../../images/like.svg";
 import iconDelete from "../../images/icon-delete.svg";
@@ -16,7 +18,7 @@ const MoviesCard = ({ card, onCardClickButton }) => {
   const likeMovie = <img src={iconLike} alt="Like" />;
   const deleteMovie = <img src={iconDelete} alt="Delete" />;
 
-  const loggedInUser = JSON.parse(localStorage.getItem("current-user"));
+  const currentUser = useContext(CurrentUserContext);
 
   function handleCardClickButton() {
     onCardClickButton(card);
@@ -46,7 +48,7 @@ const MoviesCard = ({ card, onCardClickButton }) => {
         )}
 
         <div className="card__data">
-          {loggedInUser && !isMyRatingsPage && (
+          {currentUser.email && !isMyRatingsPage && (
             <button
               className="card__button"
               type="button"

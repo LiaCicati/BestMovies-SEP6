@@ -1,3 +1,7 @@
+/*
+ This module defines the rating schema using Mongoose
+ It exports a Mongoose model for the 'rating' collection in the database
+*/
 const mongoose = require("mongoose");
 
 const ratingSchema = new mongoose.Schema({

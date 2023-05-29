@@ -4,6 +4,7 @@ import React from "react";
 const SearchForm = ({ onSearchSubmit }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
 
   function handleChange(evt) {
     setValue(evt.target.value);
@@ -20,8 +21,16 @@ const SearchForm = ({ onSearchSubmit }) => {
     } else {
       setError("");
       onSearchSubmit(removeWhiteSpace(value));
+      setHasSearched(true);
     }
   }
+
+  function handleClear() {
+    setValue("");
+    setHasSearched(false);
+    onSearchSubmit("");
+  }
+
   return (
     <section className="search">
       <form className="search__form" onSubmit={handleSubmit} noValidate>
@@ -39,6 +48,12 @@ const SearchForm = ({ onSearchSubmit }) => {
           <button className="search__button" type="submit">
             Search
           </button>
+          {hasSearched && (
+            <button className="search__clear" type="button" onClick={handleClear}>
+             Clear
+
+            </button>
+          )}
         </div>
       </form>
       {error && <span className="search__error">{error}</span>}
@@ -47,3 +62,4 @@ const SearchForm = ({ onSearchSubmit }) => {
 };
 
 export default SearchForm;
+

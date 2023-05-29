@@ -1,3 +1,7 @@
+/*
+ This module defines the movie schema using Mongoose
+ It exports a Mongoose model for the 'movie' collection in the database
+*/
 const mongoose = require("mongoose");
 
 const movieSchema = new mongoose.Schema({

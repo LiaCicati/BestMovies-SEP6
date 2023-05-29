@@ -1,29 +1,36 @@
+/*
+ This module represents the RatingRepository class responsible for interacting with the rating collection in the database.
+*/
 const Rating = require("../models/rating");
 
 class RatingRepository {
-  async createRating(rating) {
-    return Rating.create(rating);
+  constructor() {
+    this.Rating = Rating;
   }
 
-  async findRatings(owner) {
-    return Rating.find(owner);
-  }
+  createRating = async (rating) => {
+    return this.Rating.create(rating);
+  };
 
-  async findRatingByMovieTitle(title) {
-    return Rating.findOne({ title });
-  }
+  findRatings = async (owner) => {
+    return this.Rating.find(owner);
+  };
 
-  async findRatingById(id) {
-    return Rating.findById(id);
-  }
+  findRatingByMovieTitle = async (user, title) => {
+    return this.Rating.findOne({ owner: user, title });
+  };
 
-  async updateRatingById(id, newRating) {
-    return Rating.findByIdAndUpdate(
+  findRatingById = async (id) => {
+    return this.Rating.findById(id);
+  };
+
+  updateRatingById = async (id, newRating) => {
+    return this.Rating.findByIdAndUpdate(
       id,
-      { my_rating : newRating },
+      { my_rating: newRating },
       { new: true, runValidators: true }
     );
-  }
+  };
 }
 
 module.exports = RatingRepository;

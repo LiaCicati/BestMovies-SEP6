@@ -20,22 +20,26 @@ import Footer from "./components/Footer/Footer";
 import success from "./images/success.png";
 import fail from "./images/fail.png";
 import * as utils from "./utils/utils";
+// Main component of the application
 function App() {
-  const [loggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
-  const [allMovies, setAllMovies] = useState([]);
-  const [favoriteMovies, setFavoriteMovies] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [showMore, setShowMore] = useState(false);
-  const [filteredMovies, setFilteredMovies] = useState([]);
-  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-  const [tooltipImage, setTooltipImage] = useState("");
-  const [message, setMessage] = useState("");
+  // State variables
+  const [loggedIn, setIsLoggedIn] = useState(false); // Tracks if the user is logged in
+  const [currentUser, setCurrentUser] = useState({}); // Stores the current user data
+  const [allMovies, setAllMovies] = useState([]); // Stores all movies data
+  const [favoriteMovies, setFavoriteMovies] = useState([]); // Stores favorite movies data
+  const [searchValue, setSearchValue] = useState(""); // Stores the value of the search input
+  const [showMore, setShowMore] = useState(false); // Tracks whether to show "Load More" button
+  const [filteredMovies, setFilteredMovies] = useState([]); // Stores the movies to display after filtering
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false); // Controls the visibility of the info tooltip
+  const [tooltipImage, setTooltipImage] = useState(""); // Determines the image to display in the info tooltip
+  const [message, setMessage] = useState(""); // Stores the message to display in the info tooltip
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const path = location.pathname;
+  // Hooks
+  const navigate = useNavigate(); // Provides navigation functionality
+  const location = useLocation(); // Tracks the current location
+  const path = location.pathname; // Retrieves the current path
 
+  // Authentication check
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -57,52 +61,81 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  // Fetch movies and user data
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    const getUserDataAndFavoriteMovies = async () => {
-      try {
-        const [userData, favoriteMovies] = await Promise.all([
-          userService.getUser(token),
-          userService.getFavoriteMovies(token),
-        ]);
-
-        setCurrentUser(userData);
-        setFavoriteMovies(favoriteMovies);
-        localStorage.setItem("favorite-movies", JSON.stringify(favoriteMovies));
-        localStorage.setItem("current-user", JSON.stringify(userData));
-
-        const storedMovies = localStorage.getItem("movies");
-
-        if (storedMovies) {
-          const parsedMovies = JSON.parse(storedMovies);
-          const updatedMovies = utils.checkFavoriteMovies(
-            parsedMovies,
-            favoriteMovies
-          );
-          setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > utils.getMoviesCount());
-        } else {
-          const data = await movieService.getMovies();
-          const movies = data.results;
-          localStorage.setItem("movies", JSON.stringify(movies));
-          const updatedMovies = utils.checkFavoriteMovies(
-            movies,
-            favoriteMovies
-          );
-          setAllMovies(updatedMovies);
-          setShowMore(updatedMovies.length > utils.getMoviesCount());
-        }
-      } catch (error) {
-        console.error("Error fetching user data and favorite movies:", error);
+    const getMovies = () => {
+      const storedMovies = localStorage.getItem("movies");
+      if (storedMovies) {
+        const parsedMovies = JSON.parse(storedMovies);
+        const updatedMovies = utils.checkFavoriteMovies(
+          parsedMovies,
+          favoriteMovies
+        );
+        setAllMovies(updatedMovies);
+        setShowMore(updatedMovies.length > utils.getMoviesCount());
+      } else {
+        movieService
+          .getMovies()
+          .then((data) => {
+            const movies = data.results;
+            localStorage.setItem("movies", JSON.stringify(movies));
+            const updatedMovies = utils.checkFavoriteMovies(
+              movies,
+              favoriteMovies
+            );
+            setAllMovies(updatedMovies);
+            setShowMore(updatedMovies.length > utils.getMoviesCount());
+          })
+          .catch((error) => {
+            console.error("Error fetching movies:", error);
+          });
       }
+    };
+
+    const getUserDataAndFavoriteMovies = () => {
+      Promise.all([
+        userService.getUser(token),
+        userService.getFavoriteMovies(token),
+      ])
+        .then(([userData, favoriteMovies]) => {
+          setCurrentUser(userData);
+          setFavoriteMovies(favoriteMovies);
+          localStorage.setItem(
+            "favorite-movies",
+            JSON.stringify(favoriteMovies)
+          );
+          localStorage.setItem("current-user", JSON.stringify(userData));
+        })
+        .catch((error) => {
+          console.error("Error fetching user data and favorite movies:", error);
+        });
     };
 
     if (loggedIn) {
       getUserDataAndFavoriteMovies();
     }
+
+    getMovies();
+    // eslint-disable-next-line
   }, [loggedIn]);
 
+  // Update movies when favoriteMovies change
+  useEffect(() => {
+    const storedMovies = localStorage.getItem("movies");
+    if (storedMovies) {
+      const parsedMovies = JSON.parse(storedMovies);
+      const updatedMovies = utils.checkFavoriteMovies(
+        parsedMovies,
+        favoriteMovies
+      );
+      setAllMovies(updatedMovies);
+      setShowMore(updatedMovies.length > utils.getMoviesCount());
+    }
+  }, [favoriteMovies]);
+
+  // Handle user login
   function onLogin(email, password) {
     userService
       .loginUser(email, password)
@@ -121,6 +154,7 @@ function App() {
       });
   }
 
+  // Handle user registration
   function onRegister(name, email, password) {
     userService
       .registerUser(name, email, password)
@@ -141,6 +175,7 @@ function App() {
       });
   }
 
+  // Update user profile information
   function handleUpdateUserInfo({ name, email }) {
     userService
       .updateProfile({ name, email })
@@ -160,26 +195,19 @@ function App() {
       });
   }
 
+  // Add a movie to favoriteMovies
   function handleAddMovie(movie) {
     userService
       .likeMovie(movie)
       .then((favoriteMovie) => {
-        setFavoriteMovies((prevFavoriteMovies) => [
-          favoriteMovie,
-          ...prevFavoriteMovies,
-        ]);
-        updateMovieState(movie, true);
-        setFilteredMovies((prevFilteredMovies) => {
-          const updatedMovies = [...prevFilteredMovies, favoriteMovie];
-          setShowMore(updatedMovies.length > utils.getMoviesCount());
-          return updatedMovies;
-        });
+        setFavoriteMovies([favoriteMovie, ...favoriteMovies]);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
+  // Delete a movie from favoriteMovies
   function handleDeleteMovie(movie) {
     const movieId = movie.id || movie.movieId;
     const userMovie = favoriteMovies.find(
@@ -192,18 +220,22 @@ function App() {
           (favoriteMovie) => favoriteMovie.movieId !== movieId
         );
         setFavoriteMovies(newFavoriteMovies);
-        updateMovieState(movie, false);
-        setFilteredMovies((prevFilteredMovies) =>
-          prevFilteredMovies.filter(
-            (filteredMovie) => filteredMovie.id !== movie.id
-          )
-        );
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
+  // Handle add/delete favorite movie
+  function handleCardClickButton(movie) {
+    if (!movie.isFavorite && !movie._id) {
+      handleAddMovie(movie);
+    } else {
+      handleDeleteMovie(movie);
+    }
+  }
+
+  // Handle user sign out
   function onSignOut() {
     localStorage.clear();
 
@@ -213,22 +245,7 @@ function App() {
     navigate("/");
   }
 
-  function updateMovieState(movie, isFavorite) {
-    setAllMovies((prevMovies) =>
-      prevMovies.map((prevMovie) =>
-        prevMovie.id === movie.id ? { ...prevMovie, isFavorite } : prevMovie
-      )
-    );
-  }
-
-  function handleCardClickButton(movie) {
-    if (!movie.isFavorite && !movie._id) {
-      handleAddMovie(movie);
-    } else {
-      handleDeleteMovie(movie);
-    }
-  }
-
+  // Set up event listeners for window resize
   useEffect(() => {
     const handleResize = () => {
       setFilteredMovies(allMovies.slice(0, utils.getMoviesCount()));
@@ -243,6 +260,7 @@ function App() {
     setShowMore(allMovies.length > utils.getMoviesCount());
   }, [allMovies]);
 
+  // Handle searching movies
   const handleSearchSubmit = async (value) => {
     setSearchValue(value.trim());
 
@@ -266,6 +284,7 @@ function App() {
     }
   };
 
+  // Handle click on the "More" button to load more movies to the UI
   const handleClickMoreButton = () => {
     const loadCount = utils.loadMovies();
     const nextBatch = allMovies.slice(
