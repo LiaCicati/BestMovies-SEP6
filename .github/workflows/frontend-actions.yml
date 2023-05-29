@@ -1,4 +1,4 @@
-name: Fronted actions
+name: Frontend actions
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-  env:
+    env:
       REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
 
     steps:
@@ -30,4 +30,4 @@ jobs:
 
       - name: Build frontend
         working-directory: frontend
-        run: npm run build 
+        run: npm run build
