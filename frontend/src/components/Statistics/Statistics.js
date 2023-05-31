@@ -204,8 +204,8 @@ const Statistics = () => {
                       textAnchor="end"
                       height={50}
                     />
-                    <YAxis domain={[0, 10]} stroke="#FFFFFF" />
-                    <Tooltip />
+                    <YAxis domain={[0, 10]} />
+                    <Tooltip  contentStyle={{ color: '#000' }} />
                     <Legend layout="vertical" />
                     <Bar
                       dataKey="vote_average"
@@ -238,7 +238,7 @@ const Statistics = () => {
                     tick={{ fill: "#FFFFFF" }}
                   />
                   <YAxis stroke="#FFFFFF" tick={{ fill: "#FFFFFF" }} />
-                  <Tooltip />
+                  <Tooltip  contentStyle={{ color: '#000' }} />
                   <Legend />
                   <Bar dataKey="count" fill="#82ca9d" name="Number of Movies" />
                 </BarChart>
